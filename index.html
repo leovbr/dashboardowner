@@ -3,26 +3,44 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#0b1020">
-  <title>Dashboard Owner</title>
+  <meta name="theme-color" content="#071426">
+  <title>Owner Dashboard</title>
   <link rel="stylesheet" href="./auth.css">
   <script src="./auth.js" defer></script>
 </head>
 <body>
+  <header class="topbar" id="topbar" hidden>
+    <div class="topbar-inner">
+      <button class="top-brand" type="button" data-nav="home" aria-label="Beranda"><span class="top-brand-mark">O</span><span><b id="topbarBusinessName">Owner Dashboard</b><small>Business Manager</small></span></button>
+      <div class="account-center-native"><button id="accountButtonNative" type="button" aria-label="Buka profil dan pengaturan akun" title="Profil & pengaturan akun">👤</button></div>
+      <div class="menu-wrap">
+        <button id="menuToggle" class="menu-toggle" type="button" aria-label="Buka menu" aria-expanded="false"><span></span><span></span><span></span></button>
+        <nav id="sideMenu" class="side-menu" aria-hidden="true">
+          <div class="menu-title"><span>MENU</span><button id="menuClose" type="button" aria-label="Tutup menu">×</button></div>
+          <button class="menu-item" data-nav="home" type="button"><span>⌂</span><div><b>Home</b><small>Ringkasan usaha & analisis</small></div></button>
+          <button class="menu-item" data-nav="sales" type="button"><span>🧾</span><div><b>Penjualan</b><small>Catat transaksi harian</small></div></button>
+          <button class="menu-item" data-nav="products" type="button"><span>📦</span><div><b>Produk & Harga</b><small>Kelola katalog usaha</small></div></button>
+          <button class="menu-item" data-nav="reports" type="button"><span>📊</span><div><b>Riwayat Laporan</b><small>Lihat dan kelola laporan</small></div></button>
+          <button class="menu-item" data-action="backup" type="button"><span>💾</span><div><b>Backup Data</b><small>Simpan data ke perangkat</small></div></button>
+          <button class="menu-item" data-action="export" type="button"><span>📥</span><div><b>Export CSV</b><small>Download laporan usaha</small></div></button>
+          <button class="menu-item" data-action="profile" type="button"><span>✏️</span><div><b>Edit Profil Toko</b><small>Ubah identitas dan foto toko</small></div></button>
+          <button class="menu-item" data-action="settings" type="button"><span>⚙️</span><div><b>Pengaturan Akun</b><small>Pengaturan akun pemilik</small></div></button>
+          <button class="menu-item menu-logout" data-action="logout" type="button"><span>↪</span><div><b>Keluar</b><small>Akhiri sesi login</small></div></button>
+        </nav>
+      </div>
+    </div>
+  </header>
   <main class="shell">
-    <section class="brand">
+    <section class="brand" id="brandIntro">
       <div class="brand-mark">D</div>
       <p class="eyebrow">BUSINESS MANAGEMENT</p>
       <h1>Dashboard<span>Owner</span></h1>
       <p class="muted">Satu ruang untuk memantau dan mengelola usaha.</p>
       <div class="feature-row"><span>01</span><div><b>Ringkasan usaha</b><small>Fondasi dashboard pemilik</small></div></div>
       <div class="feature-row"><span>02</span><div><b>Data terstruktur</b><small>Disiapkan untuk migrasi modul</small></div></div>
-      <div class="feature-row"><span>03</span><div><b>Akses akun</b><small>Alur login dan logout tahap awal</small></div></div>
+      <div class="feature-row"><span>03</span><div><b>Akses akun</b><small>Login dan pengaturan akun</small></div></div>
     </section>
-    <section class="panel" aria-live="polite">
-      <div id="app"></div>
-      <noscript>Aktifkan JavaScript untuk menggunakan aplikasi ini.</noscript>
-    </section>
+    <section class="panel" aria-live="polite"><div id="app"></div><noscript>Aktifkan JavaScript untuk menggunakan aplikasi ini.</noscript></section>
   </main>
   <footer>Dashboard Owner · Prototype fondasi · Belum untuk data produksi</footer>
 </body>
