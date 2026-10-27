@@ -102,3 +102,22 @@ footer{text-align:center;color:#66748e;font-size:11px;padding:18px}
  .top-brand{order:1!important;margin:0 auto 0 0!important;flex:0 1 auto!important}
  .menu-wrap{order:2!important;margin-left:auto!important}
 }
+
+
+/* Daily revenue candlestick analysis */
+.revenue-panel{margin:22px 0;padding:18px;border:1px solid var(--line);border-radius:18px;background:#0a1120;overflow:hidden}
+.revenue-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.revenue-kicker{font-size:10px;letter-spacing:.18em;font-weight:800;color:#92a8cb}
+.revenue-total{font-size:clamp(25px,6vw,34px);font-weight:800;letter-spacing:-.04em;margin-top:5px;overflow-wrap:anywhere}
+.revenue-change{font-size:12px;color:#95a5bf;margin-top:4px;line-height:1.5}
+.revenue-change.is-up{color:#18b89b}.revenue-change.is-down{color:#f0445d}
+.revenue-legend{display:flex;flex-wrap:wrap;gap:10px 15px;margin:20px 0 10px;font-size:10px;color:#98a8c0}
+.revenue-legend span{display:flex;align-items:center;gap:6px}.revenue-legend i{display:inline-block;width:8px;height:8px;border-radius:2px}.legend-up{background:#18b89b}.legend-down{background:#f0445d}
+.candle-chart{width:100%;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;scrollbar-color:#34435e transparent}
+.candle-chart svg{display:block;width:100%;min-width:300px;height:auto;max-height:280px}
+.chart-axis{display:flex;justify-content:space-between;gap:8px;color:#7f90aa;font-size:10px;margin-top:6px}
+.chart-note{font-size:11px;line-height:1.6;color:#8192ab;margin:12px 0 0}
+.chart-empty{min-height:190px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:22px 8px;color:#a4b3ca}
+.chart-empty b{font-size:15px;color:#eef4ff}.chart-empty span{font-size:12px;max-width:290px;line-height:1.6}
+.chart-empty .btn{margin-top:4px}
+@media(max-width:420px){.revenue-panel{padding:14px}.revenue-head{align-items:flex-start}.revenue-head .btn{padding:9px 10px;font-size:12px}.revenue-legend{font-size:9px}}
