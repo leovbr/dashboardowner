@@ -59,3 +59,11 @@ footer{text-align:center;color:#66748e;font-size:11px;padding:18px}
 .empty-state{padding:22px;text-align:center;color:var(--muted);border:1px dashed #2a3855;border-radius:12px}
 .ac-item{padding:13px;border:1px solid #ffffff12;border-radius:13px;background:#ffffff06;margin-bottom:8px}.ac-note{font-size:11px;color:#91a6c0;line-height:1.5;margin-top:4px}.ac-actions{display:grid;gap:8px;margin-top:12px}
 @media(max-width:520px){.module-head{align-items:flex-start}.module-head h2{font-size:21px}.product-row.product-manage{align-items:flex-start;flex-direction:column}.product-actions{width:100%}.product-actions button{flex:1}.product-tools{align-items:stretch;flex-direction:column}.product-tools input{width:100%}}
+
+
+/* Header refinement: keep the Owner Dashboard / Business Manager text and move the profile icon to the right-side controls. */
+.top-brand-mark{display:none!important}
+.top-brand{gap:0!important}
+.account-center-native{order:1!important;margin-left:auto!important;flex:0 0 auto!important}
+.menu-wrap{order:2!important;flex:0 0 auto!important}
+@media(max-width:520px){.topbar-inner{gap:9px!important}.top-brand{margin-right:0!important;flex:1 1 auto!important}.account-center-native{margin-left:auto!important}}
