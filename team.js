@@ -16,9 +16,11 @@
   }
   function render() {
     styles();
+    const menu=$("sideMenu"); if(menu){menu.classList.remove("open");menu.setAttribute("aria-hidden","true");}
+    const toggle=$("menuToggle");if(toggle)toggle.setAttribute("aria-expanded","false");
     const app = $("app"); if (!app) return;
     app.innerHTML = '<p class="eyebrow dashboard-eyebrow">TEAM ACCESS</p><h2>Tim &amp; Akun</h2><p class="sub">Buat dan kelola akun Manager, Kitchen, dan Waiter / Penjual. Alurnya mengikuti repository sebelumnya.</p><div class="team-wrap"><section class="team-card"><div class="team-heading"><span class="eyebrow">BUAT AKUN</span><h3>Karyawan Baru</h3></div><form id="teamForm" class="team-form"><label>Nama karyawan<input id="teamName" required maxlength="80" placeholder="Contoh: Budi"></label><label>Bagian<select id="teamRole"><option value="manager">Manager</option><option value="kitchen">Kitchen</option><option value="waiter">Waiter / Penjual</option></select></label><label>Nomor WhatsApp<input id="teamPhone" type="tel" required maxlength="24" placeholder="08xxxxxxxxxx"></label><label>Kode toko / warung<input id="teamStore" required maxlength="40" placeholder="Contoh: AYAMKFC01"></label><button class="btn" type="submit">+ Buat Akun Karyawan</button></form><p class="team-note">Prototype lokal: akun hanya tersimpan di browser ini. Untuk login lintas perangkat perlu Supabase/backend.</p><div id="teamCredential"></div></section><section class="team-card"><div class="team-heading"><span class="eyebrow">AKUN STAFF</span><h3 id="teamCount">0 akun</h3></div><div id="teamList" class="team-list"></div></section></div><button class="btn secondary" id="teamBack" type="button">Kembali ke Dashboard</button>';
-    $("teamBack").onclick = () => window.dispatchEvent(new CustomEvent("dashboardowner:home"));
+    $("teamBack").onclick = () => window.location.reload();
     $("teamForm").onsubmit = e => {
       e.preventDefault();
       const name=$("teamName").value.trim(), role=$("teamRole").value, phone=$("teamPhone").value.trim(), store=$("teamStore").value.trim().toUpperCase();
@@ -62,9 +64,5 @@
   document.addEventListener("click",e=>{
     const b=e.target.closest('[data-nav="team"]');if(b){e.preventDefault();e.stopPropagation();render();}
   },true);
-  document.addEventListener("click",e=>{
-    if(e.target.closest('[data-nav="home"]')) window.dispatchEvent(new CustomEvent("dashboardowner:home"));
-  });
   window.addEventListener("dashboardowner:team",render);
-  window.addEventListener("dashboardowner:home",()=>{const s=JSON.parse(localStorage.getItem("dashboardowner_proto_session_v1")||"null");if(s)window.location.hash="";});
 })();
