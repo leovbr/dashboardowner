@@ -77,3 +77,14 @@ footer{text-align:center;color:#66748e;font-size:11px;padding:18px}
 .account-center-native{display:none}
 .account-popover{right:68px;top:60px}
 @media(max-width:760px){.top-brand-group{gap:9px}.top-profile-button{width:42px;height:42px;flex-basis:42px}.account-popover{right:58px;top:60px}}
+
+
+/* Header correction: keep title left and profile + hamburger together on the right */
+.top-brand-group{display:contents}
+.top-brand-mark{display:none}
+.top-brand{margin-right:auto}
+.account-center-native{display:block;position:relative;z-index:1202;flex:0 0 auto}
+#accountButtonNative{width:42px;height:42px;flex:0 0 42px;border-radius:12px;border:1px solid #34435e;background:#111e33;color:#fff;font-size:20px;cursor:pointer;display:grid;place-items:center;overflow:hidden}
+#accountButtonNative img{width:100%;height:100%;object-fit:cover}
+.account-popover{right:58px;top:60px}
+@media(max-width:760px){.top-brand-group{display:contents}.top-brand{min-width:0;margin-right:auto}.account-center-native{display:block}.account-popover{right:58px;top:60px}}
