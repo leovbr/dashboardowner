@@ -88,3 +88,17 @@ footer{text-align:center;color:#66748e;font-size:11px;padding:18px}
 #accountButtonNative img{width:100%;height:100%;object-fit:cover}
 .account-popover{right:58px;top:60px}
 @media(max-width:760px){.top-brand-group{display:contents}.top-brand{min-width:0;margin-right:auto}.account-center-native{display:block}.account-popover{right:58px;top:60px}}
+
+
+/* Final mobile header layout: profile left, brand immediately beside it, hamburger stays at far right */
+.topbar-inner{display:flex;align-items:center;gap:10px}
+.account-center-native{order:0!important;margin:0!important;flex:0 0 42px!important}
+.top-brand{order:1!important;flex:0 1 auto!important;min-width:0!important;margin:0 auto 0 0!important}
+.menu-wrap{order:2!important;margin-left:auto!important;flex:0 0 auto!important}
+#accountButtonNative{width:42px;height:42px;flex:0 0 42px}
+@media(max-width:760px){
+ .topbar-inner{gap:9px!important;padding:10px 12px}
+ .account-center-native{order:0!important;margin:0!important}
+ .top-brand{order:1!important;margin:0 auto 0 0!important;flex:0 1 auto!important}
+ .menu-wrap{order:2!important;margin-left:auto!important}
+}
