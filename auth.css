@@ -255,3 +255,21 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 /* Cashier product row: unit price left, quantity buttons right */
 .staff-product-controls{min-height:34px}
 .staff-unit-price{display:block;line-height:1.4;font-variant-numeric:tabular-nums}
+
+
+/* Online cashier cards aligned like offline cashier */
+.online-cashier-mode-tabs{margin:14px 0 18px}
+.online-order-products{display:grid;gap:10px;margin:14px 0}
+.online-order-product{display:grid;grid-template-columns:minmax(0,1fr);gap:11px;padding:13px 14px;margin:0;border:1px solid #25334e;border-radius:14px;background:linear-gradient(145deg,#0d1729,#09111f);min-width:0}
+.online-order-top{display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0}
+.online-order-top strong{font-size:14px;line-height:1.45;overflow-wrap:anywhere}
+.online-order-top .online-qty-label{flex:0 0 auto;min-width:42px;padding:5px 9px;border-radius:9px;background:#172846;color:#b7d0ff}
+.online-order-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:0}
+.online-price-wrap{display:grid;gap:5px;flex:1;min-width:0;font-size:11px;color:var(--muted);font-weight:700}
+.online-price-wrap input{width:100%;min-width:0;padding:9px 10px;border:1px solid #2a3855;border-radius:9px;background:#101a2c;color:var(--text);font:inherit;font-size:13px}
+.online-stepper{display:flex;align-items:center;justify-content:flex-end;gap:7px;flex:0 0 auto}
+.online-step{width:34px;height:32px;border-radius:9px;border:1px solid #344766;background:#14223a;color:#eef4ff;font-size:20px;line-height:1;display:grid;place-items:center;cursor:pointer;touch-action:manipulation}
+.online-step[data-step="1"]{background:#1c3c62;border-color:#3867a1}
+.online-order-bottom{padding-top:9px;border-top:1px solid #25334e;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.online-order-bottom strong{font-size:16px;font-weight:800;color:#d9e6ff;font-variant-numeric:tabular-nums}
+@media(max-width:380px){.online-order-product{grid-template-columns:minmax(0,1fr);gap:10px;padding:12px}.online-order-controls{gap:8px}.online-price-wrap input{padding:9px 8px}}
