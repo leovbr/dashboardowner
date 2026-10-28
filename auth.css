@@ -335,3 +335,6 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 .cashier-summary-action{display:flex;align-items:center;gap:14px;flex-shrink:0}.cashier-summary-action>strong{font-size:clamp(16px,2.2vw,22px);white-space:nowrap}.cashier-summary-submit{border:0;border-radius:12px;padding:12px 16px;background:linear-gradient(120deg,#4e8cff,#2ed7ed);color:#071426;font:inherit;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap}
 .waiter-home .staff-product-save,.waiter-home .staff-total-offline,.waiter-home #staff-offline-error,.waiter-home #staff-offline-save{display:none!important}
 @media(max-width:520px){.cashier-floating-summary{gap:8px;padding:11px 12px;padding-bottom:calc(11px + env(safe-area-inset-bottom))}.cashier-summary-action{gap:8px}.cashier-summary-submit{padding:11px 12px;font-size:12px}.cashier-summary-copy strong{font-size:12px}.cashier-summary-copy small{font-size:10px}.waiter-home{padding-bottom:135px!important}}
+
+/* Keep cashier summary attached to the viewport, independent of the app scroll container */
+.cashier-floating-summary{position:fixed!important;inset-inline:0!important;bottom:0!important;z-index:9999!important;width:100%!important;box-sizing:border-box!important}
