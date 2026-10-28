@@ -235,3 +235,9 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 .cashier-mode-tabs button{min-height:42px;border:1px solid transparent;border-radius:9px;background:transparent;color:#aebed5;font:inherit;font-size:13px;font-weight:800;cursor:pointer;touch-action:manipulation}
 .cashier-mode-tabs button.active{background:#24558d;border-color:#4b86c8;color:#fff;box-shadow:0 4px 14px #0002}
 [hidden]{display:none!important}
+
+/* Offline cashier editable price and quantity confirmation */
+.staff-edit-price{display:grid;gap:5px;min-width:0;flex:1;font-size:11px;color:var(--muted);font-weight:700}
+.staff-edit-price input{width:100%;min-width:0;padding:9px 10px;border:1px solid #2a3855;border-radius:9px;background:#101a2c;color:var(--text);font:inherit;font-size:13px}
+.staff-product-controls .staff-stepper{flex:0 0 auto}
+.staff-product-save[hidden]{display:none!important}
