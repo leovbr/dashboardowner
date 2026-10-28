@@ -273,3 +273,10 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 .online-order-bottom{padding-top:9px;border-top:1px solid #25334e;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .online-order-bottom strong{font-size:16px;font-weight:800;color:#d9e6ff;font-variant-numeric:tabular-nums}
 @media(max-width:380px){.online-order-product{grid-template-columns:minmax(0,1fr);gap:10px;padding:12px}.online-order-controls{gap:8px}.online-price-wrap input{padding:9px 8px}}
+
+/* Match online subtotal + per-product Oke to offline cashier */
+.online-order-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:9px;border-top:1px solid #25334e}
+.online-order-bottom strong{border-top:0;padding-top:0;text-align:left;flex:1;font-size:16px;font-weight:800;color:#d9e6ff;font-variant-numeric:tabular-nums}
+.online-product-save{min-width:60px;height:34px;margin-top:0;padding:0 14px;border-radius:9px;border:1px solid #3867a1;background:#1c3c62;color:#eef4ff;font-size:13px;font-weight:800;cursor:pointer;touch-action:manipulation}
+.online-product-save:active{transform:scale(.97)}
+.online-product-save[hidden]{display:none!important}
