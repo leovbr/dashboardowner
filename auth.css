@@ -358,3 +358,18 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 .cashier-detail-row strong{white-space:nowrap}.cashier-detail-empty{color:#a5b1c8;font-size:13px}
 @media(min-width:700px){.cashier-summary-details{left:auto;right:max(16px,calc((100vw - 920px)/2));width:min(420px,calc(100vw - 32px))}}
 @media(max-width:520px){.cashier-floating-summary{gap:9px!important}.cashier-summary-line{gap:6px}.cashier-summary-line strong:first-child{font-size:11px}.cashier-summary-submit{padding:12px 10px!important;font-size:11px!important;max-width:42%}.cashier-summary-details{bottom:calc(112px + env(safe-area-inset-bottom))}}
+
+/* Expand order details inside the bottom summary, never as a popup above it */
+.cashier-floating-summary{display:flex!important;flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;gap:10px!important}
+.cashier-summary-copy{display:flex!important;flex-direction:column!important;gap:8px!important;width:100%!important}
+.cashier-summary-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.cashier-summary-heading .cashier-summary-eyebrow{flex:1}
+.cashier-summary-heading .cashier-summary-details-toggle{font-size:24px;line-height:1;min-width:34px;text-align:center;padding:0 6px}
+.cashier-summary-line{width:100%}
+.cashier-summary-details{position:static!important;inset:auto!important;width:auto!important;max-height:min(30vh,260px)!important;overflow-y:auto!important;padding:0 4px!important;margin:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+.cashier-summary-details[hidden],.cashier-summary-close[hidden]{display:none!important}
+.cashier-detail-row{padding:8px 0;font-size:13px}
+.cashier-summary-close{border:0;background:transparent;color:#8fb7ff;text-align:left;padding:2px 0;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.cashier-floating-summary .cashier-summary-submit{max-width:none!important;width:100%!important;min-height:44px}
+@media(min-width:700px){.cashier-floating-summary{padding-inline:max(18px,calc((100vw - 920px)/2))!important}.cashier-summary-details{max-height:220px!important}}
+@media(max-width:520px){.cashier-floating-summary{gap:8px!important}.cashier-summary-copy{gap:6px!important}.cashier-floating-summary .cashier-summary-submit{padding:12px!important}}
