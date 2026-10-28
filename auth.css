@@ -280,3 +280,18 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 .online-product-save{min-width:60px;height:34px;margin-top:0;padding:0 14px;border-radius:9px;border:1px solid #3867a1;background:#1c3c62;color:#eef4ff;font-size:13px;font-weight:800;cursor:pointer;touch-action:manipulation}
 .online-product-save:active{transform:scale(.97)}
 .online-product-save[hidden]{display:none!important}
+
+
+/* Waiter dashboard: compact cashier view and readable transaction history */
+#online-cashier-panel>.eyebrow,
+#online-cashier-panel>h3,
+#online-cashier-panel>.sub{display:none!important}
+.staff-total-online,.staff-total-offline{display:none!important}
+.staff-expense-card{display:none!important}
+#staff-history{display:grid;gap:10px;margin-top:12px}
+.staff-history-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:13px 14px;margin:0;border:1px solid #25334e;border-radius:13px;background:linear-gradient(145deg,#0d1729,#09111f);min-width:0}
+.staff-history-row>span{min-width:0;flex:1;overflow-wrap:anywhere}
+.staff-history-row>span>b{display:block;color:#e5edff;font-size:13px;line-height:1.5;margin-bottom:5px}
+.staff-history-row small{display:block;color:#9eacc4;font-size:12px;line-height:1.55}
+.staff-history-row>b{flex:0 0 auto;white-space:nowrap;color:#c8d9ff;font-size:14px;font-variant-numeric:tabular-nums}
+@media(max-width:380px){.staff-history-row{padding:11px;gap:8px}.staff-history-row>b{font-size:13px}}
