@@ -164,3 +164,24 @@ button.sales-summary-card{cursor:pointer}
 .analysis-chart-tabs button.active,.analysis-timeframes button.active{background:#24558d;border-color:#4b86c8;color:#fff}
 .report-custom-dates{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 @media(max-width:480px){.sales-summary-grid{gap:8px}.sales-summary-card{padding:12px}.analysis-chart-tabs button,.analysis-timeframes button{flex:1;padding:9px 10px}}
+
+/* Mobile viewport fit and horizontally scrollable candle plot */
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+.shell{width:100%;max-width:1120px;min-width:0}
+.panel{width:100%;min-width:0;max-width:100%;overflow:hidden}
+#app{width:100%;min-width:0;max-width:100%}
+#app>*{min-width:0;max-width:100%}
+.revenue-panel{width:100%;min-width:0;max-width:100%;overflow:hidden;padding:clamp(12px,3.5vw,18px)}
+.candle-chart{display:block;width:100%;max-width:100%;min-width:0;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;touch-action:pan-x}
+.candle-chart svg{display:block;width:auto;min-width:100%;max-width:none;height:230px;flex:none}
+.sales-summary-grid,.sales-summary-card,.module-card{min-width:0;max-width:100%}
+@media(max-width:760px){
+ body:has(#topbar:not([hidden])) .shell{display:block;padding:14px 12px;width:100%;margin:0}
+ body:has(#topbar:not([hidden])) .shell>.brand{display:none}
+ body:has(#topbar:not([hidden])) .shell>.panel{padding:clamp(14px,4vw,22px);border-radius:18px}
+ .topbar-inner{width:100%;padding:10px 12px}
+ .revenue-panel{margin:16px 0;padding:12px}
+ .analysis-chart-tabs,.analysis-timeframes{width:100%;gap:6px}
+ .analysis-chart-tabs button,.analysis-timeframes button{min-width:0;flex:1;padding:9px 6px;font-size:12px}
+ .sales-summary-card strong{font-size:clamp(16px,4vw,22px)}
+}
