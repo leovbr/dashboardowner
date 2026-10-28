@@ -141,6 +141,7 @@
     }
     document.getElementById("staffRoleLabel").textContent=heading[role]||"Staff Dashboard";
     app.innerHTML=(role==="waiter"?'<p class="welcome">Halo, <strong>'+escapeHtml(u.name||u.username)+'</strong>.</p>':'<p class="eyebrow dashboard-eyebrow">'+escapeHtml(roleNames[role]||"STAFF ACCESS")+'</p><h2>'+escapeHtml(heading[role]||"Dashboard Staff")+'</h2><p class="welcome">Halo, <strong>'+escapeHtml(u.name||u.username)+'</strong>. Ini ruang kerja '+escapeHtml(roleNames[role]||"staff")+'.</p><div class="role-pill">'+escapeHtml(roleNames[role]||role)+' · '+escapeHtml(u.storeCode||"")+"</div>")+body+'<button class="btn secondary" id="staff-logout" type="button">Keluar</button>';
+    const floatingCashierSummary=document.getElementById("cashierFloatingSummary");if(floatingCashierSummary&&role==="waiter")document.body.appendChild(floatingCashierSummary);
     document.getElementById("staff-logout").onclick=logout;
     app.classList.toggle("waiter-home",role==="waiter");app.classList.remove("waiter-subpage");
     const staffMenu=document.getElementById("staffSideMenu"),staffToggle=document.getElementById("staffMenuToggle"),staffHome=document.getElementById("staffHomeButton");
