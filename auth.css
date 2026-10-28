@@ -241,3 +241,13 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 .staff-edit-price input{width:100%;min-width:0;padding:9px 10px;border:1px solid #2a3855;border-radius:9px;background:#101a2c;color:var(--text);font:inherit;font-size:13px}
 .staff-product-controls .staff-stepper{flex:0 0 auto}
 .staff-product-save[hidden]{display:none!important}
+
+/* Owner-locked offline price and matching online quantity controls */
+.staff-owner-price{display:grid;gap:5px;min-width:0;flex:1;padding:9px 10px;border:1px solid #2a3855;border-radius:9px;background:#101a2c}
+.staff-owner-price small{font-size:10px;color:var(--muted);font-weight:700}
+.staff-owner-price strong{font-size:13px;color:var(--text);font-variant-numeric:tabular-nums}
+.online-stepper{display:flex;align-items:center;justify-content:center;gap:10px}
+.online-step{width:34px;height:34px;border:1px solid #35547b;border-radius:9px;background:#13243a;color:#fff;font-size:20px;font-weight:800;cursor:pointer;touch-action:manipulation}
+.online-qty-label{min-width:30px;text-align:center;font-size:13px;font-weight:800;color:var(--text)}
+.online-product-save[hidden]{display:none!important}
+.online-product-save{margin-top:7px;padding:8px 14px;border:1px solid #4b86c8;border-radius:9px;background:#24558d;color:#fff;font-weight:800;cursor:pointer}
