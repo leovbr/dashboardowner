@@ -251,3 +251,7 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 .online-qty-label{min-width:30px;text-align:center;font-size:13px;font-weight:800;color:var(--text)}
 .online-product-save[hidden]{display:none!important}
 .online-product-save{margin-top:7px;padding:8px 14px;border:1px solid #4b86c8;border-radius:9px;background:#24558d;color:#fff;font-weight:800;cursor:pointer}
+
+/* Cashier product row: unit price left, quantity buttons right */
+.staff-product-controls{min-height:34px}
+.staff-unit-price{display:block;line-height:1.4;font-variant-numeric:tabular-nums}
