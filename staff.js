@@ -1,0 +1,1 @@
+(()=>{const app=document.getElementById("staffApp");app.textContent="Portal Staff Penjual sedang disiapkan.";})();
