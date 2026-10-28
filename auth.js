@@ -52,7 +52,7 @@
     document.getElementById("home-products").onclick=renderProducts;
     document.getElementById("analysis-offline").onclick=()=>renderSalesPage("offline");
     document.getElementById("analysis-online").onclick=()=>renderSalesPage("online");
-    document.querySelectorAll("[data-chart-source]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-chart-source]").forEach(x=>x.classList.toggle("active",x===b));renderAnalysisChart(b.dataset.chartSource,Number(document.querySelector("[data-timeframe].active")?.dataset.timeframe||1);});
+    document.querySelectorAll("[data-chart-source]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-chart-source]").forEach(x=>x.classList.toggle("active",x===b));renderAnalysisChart(b.dataset.chartSource,Number(document.querySelector("[data-timeframe].active")?.dataset.timeframe||1));});
     document.querySelectorAll("[data-timeframe]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-timeframe]").forEach(x=>x.classList.toggle("active",x===b));renderAnalysisChart(document.querySelector("[data-chart-source].active")?.dataset.chartSource||"offline",Number(b.dataset.timeframe));});
     document.querySelector('[data-chart-source="offline"]').classList.add("active");document.querySelector('[data-timeframe="1"]').classList.add("active");
     renderHomeProducts();renderAnalysisChart("offline",1);bindNavigation();
