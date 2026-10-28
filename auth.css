@@ -151,3 +151,16 @@ footer{text-align:center;color:#66748e;font-size:11px;padding:18px}
 
 /* Per-product subtotal and save action */
 .staff-product-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:9px;border-top:1px solid #25334e}.staff-product-bottom .staff-product-subtotal{border-top:0;padding-top:0;text-align:left;flex:1}.staff-product-save{min-width:60px;height:34px;padding:0 14px;border-radius:9px;border:1px solid #3867a1;background:#1c3c62;color:#eef4ff;font-size:13px;font-weight:800;cursor:pointer;touch-action:manipulation}.staff-product-save:active{transform:scale(.97)}
+/* Owner sales analytics */
+.sales-summary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}
+.sales-summary-card{display:flex;flex-direction:column;align-items:flex-start;gap:7px;text-align:left;padding:15px;border:1px solid #263954;border-radius:14px;background:#101d31;color:#eaf1ff;min-width:0}
+button.sales-summary-card{cursor:pointer}
+.sales-summary-card span{font-size:12px;color:#9fb0ca}
+.sales-summary-card strong{font-size:clamp(18px,4vw,25px);overflow-wrap:anywhere}
+.sales-summary-card small{font-size:12px;color:#91a2bc}
+.sales-summary-total{grid-column:1/-1;background:linear-gradient(135deg,#142743,#111c30)}
+.analysis-chart-tabs,.analysis-timeframes{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}
+.analysis-chart-tabs button,.analysis-timeframes button{border:1px solid #314563;background:#101d31;color:#c5d2e7;border-radius:9px;padding:9px 13px;font-weight:750;cursor:pointer}
+.analysis-chart-tabs button.active,.analysis-timeframes button.active{background:#24558d;border-color:#4b86c8;color:#fff}
+.report-custom-dates{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media(max-width:480px){.sales-summary-grid{gap:8px}.sales-summary-card{padding:12px}.analysis-chart-tabs button,.analysis-timeframes button{flex:1;padding:9px 10px}}
