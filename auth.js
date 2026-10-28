@@ -15,7 +15,7 @@
   const escapeHtml=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const setError=msg=>{const e=document.getElementById("error");if(e)e.textContent=msg||"";};
   function renderAuth(){
-    document.getElementById("topbar").hidden=true;document.getElementById("brandIntro").hidden=false;
+    document.getElementById("topbar").hidden=true;document.getElementById("staffTopbar").hidden=true;document.getElementById("brandIntro").hidden=false;
     const intro=document.getElementById("brandIntro");
     intro.querySelector("h1").innerHTML='Dashboard<span>Owner</span>';
     intro.querySelector(".muted").textContent="Satu ruang untuk memantau dan mengelola usaha.";
@@ -44,7 +44,7 @@
   function renderDashboard(){
     const s=session(),u=users().find(x=>x.username===s?.username);if(!u){localStorage.removeItem(SESSION_KEY);return renderAuth();}
     const p=profile(),list=products();
-    document.getElementById("topbar").hidden=false;document.getElementById("brandIntro").hidden=true;
+    document.getElementById("staffTopbar").hidden=true;document.getElementById("topbar").hidden=false;document.getElementById("brandIntro").hidden=true;
     document.getElementById("topbarBusinessName").textContent=p.businessName||"Owner Dashboard";
     document.getElementById("accountButtonNative").innerHTML=p.avatar?'<img src="'+p.avatar+'" alt="Foto profil">':"👤";
     app.innerHTML='<p class="eyebrow dashboard-eyebrow">ANALISIS USAHA</p><h2>Ringkasan Omzet</h2><p class="welcome">Halo, <strong>'+escapeHtml(p.ownerName||u.name||u.username)+'</strong>. Pantau kenaikan dan penurunan omzet harian.</p><section class="revenue-panel"><div class="revenue-head"><div><span class="revenue-kicker">OMZET HARIAN</span><div class="revenue-total" id="revenueToday">—</div><div class="revenue-change" id="revenueChange">Tambahkan data omzet untuk mulai analisis</div></div><button class="btn compact" id="add-revenue" type="button">+ Catat Omzet</button></div><div class="revenue-legend"><span><i class="legend-up"></i>Naik dibanding hari sebelumnya</span><span><i class="legend-down"></i>Turun dibanding hari sebelumnya</span></div><div class="candle-chart" id="revenueChart"></div></section><section class="module-card"><div class="module-head"><div><p class="eyebrow">KATALOG</p><h3>Produk & Harga</h3></div><button class="btn compact" id="home-products" type="button">Kelola</button></div><div id="home-product-list"></div></section>';
@@ -104,8 +104,9 @@
   function logout(){localStorage.removeItem(SESSION_KEY);document.getElementById("account-popover")?.remove();document.querySelector(".ac-modal")?.remove();mode="login";renderAuth();}
   function renderStaffDashboard(){
     const s=session(),u=users().find(x=>x.username===s?.username);if(!u){localStorage.removeItem(SESSION_KEY);return renderAuth();}
-    document.getElementById("topbar").hidden=true;document.getElementById("brandIntro").hidden=true;
-    const role=u.role||"owner",roleNames={manager:"Manager",kitchen:"Kitchen",waiter:"Waiter / Penjual"},heading={manager:"Dashboard Manager",kitchen:"Dashboard Kitchen",waiter:"Penjualan Harian"};
+    document.getElementById("topbar").hidden=true;document.getElementById("brandIntro").hidden=true;document.getElementById("staffTopbar").hidden=false;
+    const p=profile();document.getElementById("staffStoreName").textContent=p.businessName||u.storeName||u.storeCode||"Nama Toko Belum Diatur";document.getElementById("staffAvatar").innerHTML=p.avatar?'<img src="'+p.avatar+'" alt="Foto profil toko">':"👤";
+    const role=u.role||"owner",roleNames={manager:"Manager",kitchen:"Kitchen",waiter:"Waiter / Penjual"},heading={manager:"Manager Dashboard",kitchen:"Kitchen Dashboard",waiter:"Penjual Dashboard"};
     let body='';
     if(role==="waiter"){
       const all=read("dashboardowner_staff_sales_v1",[]),mine=all.filter(x=>x.staffUsername===u.username),day=new Date().toLocaleDateString("en-CA"),todayRows=mine.filter(x=>x.date===day),plist=products().filter(p=>p&&p.active!==false);
@@ -116,6 +117,7 @@
     }else{
       body='<div class="module-card"><p class="eyebrow">OPERASIONAL USAHA</p><h3>Ringkasan Tim</h3><p class="sub">Area Manager untuk membantu pemantauan operasional. Akses laporan bersama akan ditambahkan saat data cloud tersedia.</p><div class="product-row"><span>Akun staff aktif</span><b>'+users().filter(x=>x.role&&x.role!=="owner"&&x.active!==false&&x.storeCode===u.storeCode).length+'</b></div><div class="product-row"><span>Katalog produk</span><b>'+products().length+'</b></div><p class="sub">Gunakan halaman ini untuk alur operasional; hak akses laporan akan diatur lebih lanjut.</p></div>';
     }
+    document.getElementById("staffRoleLabel").textContent=heading[role]||"Staff Dashboard";
     app.innerHTML='<p class="eyebrow dashboard-eyebrow">'+escapeHtml(roleNames[role]||"STAFF ACCESS")+'</p><h2>'+escapeHtml(heading[role]||"Dashboard Staff")+'</h2><p class="welcome">Halo, <strong>'+escapeHtml(u.name||u.username)+'</strong>. Ini ruang kerja '+escapeHtml(roleNames[role]||"staff")+'.</p><div class="role-pill">'+escapeHtml(roleNames[role]||role)+' · '+escapeHtml(u.storeCode||"")+'</div>'+body+'<button class="btn secondary" id="staff-logout" type="button">Keluar</button>';
     document.getElementById("staff-logout").onclick=logout;
     if(role==="waiter"){
