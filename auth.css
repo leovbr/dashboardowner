@@ -373,3 +373,7 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 .cashier-floating-summary .cashier-summary-submit{max-width:none!important;width:100%!important;min-height:44px}
 @media(min-width:700px){.cashier-floating-summary{padding-inline:max(18px,calc((100vw - 920px)/2))!important}.cashier-summary-details{max-height:220px!important}}
 @media(max-width:520px){.cashier-floating-summary{gap:8px!important}.cashier-summary-copy{gap:6px!important}.cashier-floating-summary .cashier-summary-submit{padding:12px!important}}
+
+/* Compact chevron-only close control for the inline order details */
+.cashier-summary-close{display:block!important;width:100%!important;text-align:center!important;font-size:20px!important;line-height:1!important;padding:3px 0!important}
+.cashier-summary-close[hidden]{display:none!important}
