@@ -121,3 +121,6 @@ footer{text-align:center;color:#66748e;font-size:11px;padding:18px}
 .chart-empty b{font-size:15px;color:#eef4ff}.chart-empty span{font-size:12px;max-width:290px;line-height:1.6}
 .chart-empty .btn{margin-top:4px}
 @media(max-width:420px){.revenue-panel{padding:14px}.revenue-head{align-items:flex-start}.revenue-head .btn{padding:9px 10px;font-size:12px}.revenue-legend{font-size:9px}}
+
+/* Role-based login and staff workspace */
+.field select{width:100%;padding:13px 12px;border:1px solid #2a3855;border-radius:12px;background:#080f1d;color:var(--text);font:inherit;outline:none}.field select:focus{border-color:var(--blue);box-shadow:0 0 0 3px #6596ff18}.role-pill{display:inline-block;padding:5px 10px;border-radius:999px;background:#17304b;color:#a9caff;font-size:11px;font-weight:800;margin:4px 0 14px}.product-list{display:grid;gap:9px;margin:12px 0}.product-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px;border:1px solid #25334e;border-radius:13px;background:#0a1120}.product-row small{color:var(--muted)}.module-card{margin:16px 0}.module-card .field{margin:12px 0}
