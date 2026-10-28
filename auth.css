@@ -185,3 +185,18 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
  .analysis-chart-tabs button,.analysis-timeframes button{min-width:0;flex:1;padding:9px 6px;font-size:12px}
  .sales-summary-card strong{font-size:clamp(16px,4vw,22px)}
 }
+
+/* Online cashier */
+.online-cashier{border-color:#35547c;background:linear-gradient(145deg,#101e34,#0a1120)}
+.online-order-products{display:grid;gap:10px;margin:14px 0}
+.online-order-product{display:grid;grid-template-columns:minmax(0,1fr) 82px;gap:12px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:12px;background:#080f1d;min-width:0}
+.online-order-info{min-width:0}
+.online-order-info strong,.online-order-info small{display:block}
+.online-order-info strong{overflow-wrap:anywhere;font-size:13px}
+.online-order-info small{font-size:11px;margin:5px 0;color:var(--muted)}
+.online-order-product input{width:100%;min-width:0;padding:9px 10px;border:1px solid #2a3855;border-radius:9px;background:#101a2c;color:var(--text);font:inherit}
+.online-order-qty{display:flex;flex-direction:column;align-items:stretch;gap:7px;min-width:0}
+.online-order-qty label{font-size:11px;color:var(--muted)}
+.online-order-qty input{display:block;margin-top:4px}
+.online-order-qty small{text-align:right;font-weight:750;color:#b9ccff;overflow-wrap:anywhere}
+@media(max-width:380px){.online-order-product{grid-template-columns:minmax(0,1fr) 72px;gap:8px;padding:9px}.online-order-product input{padding:8px 7px;font-size:13px}}
