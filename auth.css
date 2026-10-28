@@ -229,3 +229,9 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
   #home-product-list .product-row>span{font-size:12px}
   #home-product-list .product-row>b{font-size:12px}
 }
+
+/* Compact offline/online cashier switch */
+.cashier-mode-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:14px 0 16px;padding:5px;border:1px solid #263954;border-radius:13px;background:#080f1d}
+.cashier-mode-tabs button{min-height:42px;border:1px solid transparent;border-radius:9px;background:transparent;color:#aebed5;font:inherit;font-size:13px;font-weight:800;cursor:pointer;touch-action:manipulation}
+.cashier-mode-tabs button.active{background:#24558d;border-color:#4b86c8;color:#fff;box-shadow:0 4px 14px #0002}
+[hidden]{display:none!important}
