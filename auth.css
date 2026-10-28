@@ -159,11 +159,11 @@ button.sales-summary-card{cursor:pointer}
 .sales-summary-card strong{font-size:clamp(18px,4vw,25px);overflow-wrap:anywhere}
 .sales-summary-card small{font-size:12px;color:#91a2bc}
 .sales-summary-total{grid-column:1/-1;background:linear-gradient(135deg,#142743,#111c30)}
-.analysis-chart-tabs,.analysis-timeframes{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}
-.analysis-chart-tabs button,.analysis-timeframes button{border:1px solid #314563;background:#101d31;color:#c5d2e7;border-radius:9px;padding:9px 13px;font-weight:750;cursor:pointer}
-.analysis-chart-tabs button.active,.analysis-timeframes button.active{background:#24558d;border-color:#4b86c8;color:#fff}
+.analysis-chart-tabs{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}
+.analysis-chart-tabs button{border:1px solid #314563;background:#101d31;color:#c5d2e7;border-radius:9px;padding:9px 13px;font-weight:750;cursor:pointer}
+.analysis-chart-tabs button.active{background:#24558d;border-color:#4b86c8;color:#fff}
 .report-custom-dates{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-@media(max-width:480px){.sales-summary-grid{gap:8px}.sales-summary-card{padding:12px}.analysis-chart-tabs button,.analysis-timeframes button{flex:1;padding:9px 10px}}
+@media(max-width:480px){.sales-summary-grid{gap:8px}.sales-summary-card{padding:12px}.analysis-chart-tabs button{flex:1;padding:9px 10px}}
 
 /* Mobile viewport fit and horizontally scrollable candle plot */
 html,body{width:100%;max-width:100%;overflow-x:hidden}
