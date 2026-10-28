@@ -338,3 +338,23 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 
 /* Keep cashier summary attached to the viewport, independent of the app scroll container */
 .cashier-floating-summary{position:fixed!important;inset-inline:0!important;bottom:0!important;z-index:9999!important;width:100%!important;box-sizing:border-box!important}
+
+/* Cashier unified surface, two-column catalog on phone/tablet/desktop */
+.waiter-home .module-card{background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;padding:0!important}
+.waiter-home .module-card .module-card{background:transparent!important}
+.waiter-home #staff-product-list,.waiter-home .staff-order-products,.waiter-home .online-order-products{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;align-items:stretch}
+.waiter-home .staff-product-card,.waiter-home .staff-order-product,.waiter-home .online-order-product{min-width:0!important;margin:0!important;padding:12px!important}
+.waiter-home .staff-product-card *, .waiter-home .staff-order-product *, .waiter-home .online-order-product *{min-width:0}
+.cashier-floating-summary{display:flex!important;align-items:center!important;gap:14px!important;justify-content:space-between!important}
+.cashier-summary-copy{flex:1;min-width:0;gap:6px}
+.cashier-summary-line{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.cashier-summary-line strong:first-child{font-size:13px}
+.cashier-summary-line strong:last-child{font-size:clamp(16px,2.2vw,22px);white-space:nowrap}
+.cashier-summary-copy .cashier-summary-eyebrow{font-size:10px;letter-spacing:.07em}
+.cashier-summary-details-toggle{border:0;background:transparent;color:#8fb7ff;text-align:left;padding:2px 0;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.cashier-summary-submit{flex-shrink:0;max-width:44%;white-space:normal;line-height:1.2}
+.cashier-summary-details{position:fixed;z-index:10000;left:12px;right:12px;bottom:calc(104px + env(safe-area-inset-bottom));max-height:min(48vh,420px);overflow:auto;padding:14px;border:1px solid #2b3b5b;border-radius:16px;background:#0a1223;color:#e9f0ff;box-shadow:0 10px 36px #0008}
+.cashier-detail-row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #26334b;font-size:13px}
+.cashier-detail-row strong{white-space:nowrap}.cashier-detail-empty{color:#a5b1c8;font-size:13px}
+@media(min-width:700px){.cashier-summary-details{left:auto;right:max(16px,calc((100vw - 920px)/2));width:min(420px,calc(100vw - 32px))}}
+@media(max-width:520px){.cashier-floating-summary{gap:9px!important}.cashier-summary-line{gap:6px}.cashier-summary-line strong:first-child{font-size:11px}.cashier-summary-submit{padding:12px 10px!important;font-size:11px!important;max-width:42%}.cashier-summary-details{bottom:calc(112px + env(safe-area-inset-bottom))}}
