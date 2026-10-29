@@ -597,3 +597,13 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 .revenue-history-breakdown span{font-size:12px;color:var(--muted,#94a3b8)}
 .revenue-history-breakdown b{font-size:14px}
 @media(max-width:420px){.revenue-history-card .module-head>strong{font-size:16px}.revenue-history-breakdown>div{padding:10px}}
+
+
+/* Clickable omzet bars detail */
+.revenue-candle{cursor:pointer;outline:none}
+.revenue-candle:focus rect{stroke:#dbeafe;stroke-width:2.5}
+.revenue-candle-detail{display:grid;gap:7px;margin:12px 4px 2px;padding:14px 16px;border:1px solid #2a3a55;border-radius:14px;background:rgba(15,27,46,.88);color:#cbd5e1}
+.revenue-candle-detail span,.revenue-candle-detail>small{font-size:12px;color:#94a3b8}
+.revenue-candle-detail strong{font-size:16px;color:#f1f5f9}
+.revenue-candle-detail>b{font-size:15px}
+.revenue-candle-detail>b small{font-size:12px;font-weight:500}
