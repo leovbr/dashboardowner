@@ -545,3 +545,17 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 @keyframes storeBrandEnter{from{opacity:0;transform:translateX(-7px)}to{opacity:1;transform:translateX(0)}}
 @media(prefers-reduced-motion:reduce){.staff-brand,.staff-brand-copy strong#staffStoreName{animation:none!important}.staff-avatar{transition:none!important}}
 @media(max-width:520px){.staff-brand-copy strong#staffStoreName{font-size:15px;max-width:62vw}}
+
+/* Premium typography for store name in cashier navbar */
+.staff-brand-copy strong#staffStoreName{
+  font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif!important;
+  font-size:17px!important;
+  font-weight:850!important;
+  letter-spacing:.055em!important;
+  line-height:1.2!important;
+  text-transform:uppercase;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  filter:drop-shadow(0 1px 8px rgba(77,145,255,.12));
+}
+@media(max-width:520px){.staff-brand-copy strong#staffStoreName{font-size:15px!important;letter-spacing:.04em!important}}
