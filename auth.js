@@ -177,7 +177,44 @@
     }
     if(role==="kitchen")document.getElementById("kitchen-form").onsubmit=e=>{e.preventDefault();const rows=read("dashboardowner_kitchen_logs_v1",[]);rows.unshift({staffUsername:u.username,storeCode:u.storeCode,type:document.getElementById("kitchen-type").value,item:document.getElementById("kitchen-item").value.trim(),qty:Number(document.getElementById("kitchen-qty").value),note:document.getElementById("kitchen-note").value.trim(),date:new Date().toLocaleDateString("en-CA"),createdAt:new Date().toISOString()});localStorage.setItem("dashboardowner_kitchen_logs_v1",JSON.stringify(rows));renderStaffDashboard();};
   }
+
+  function enhanceBrandControls(){
+    const fmtDate=value=>{if(!value)return "Pilih tanggal";const p=value.split("-");return p.length===3?p[2]+"/"+p[1]+"/"+p[0]:value;};
+    document.querySelectorAll("select:not([data-brand-enhanced])").forEach(sel=>{
+      sel.dataset.brandEnhanced="1";
+      const wrap=document.createElement("div");wrap.className="brand-select-wrap";
+      sel.parentNode.insertBefore(wrap,sel);wrap.appendChild(sel);sel.classList.add("brand-native-select");
+      const trigger=document.createElement("button");trigger.type="button";trigger.className="brand-select-trigger";trigger.setAttribute("aria-haspopup","listbox");trigger.setAttribute("aria-expanded","false");
+      const value=document.createElement("span"),arrow=document.createElement("span");arrow.className="brand-select-arrow";arrow.textContent="⌄";trigger.append(value,arrow);
+      const menu=document.createElement("div");menu.className="brand-select-menu";menu.hidden=true;menu.setAttribute("role","listbox");
+      const sync=()=>{const opt=sel.options[sel.selectedIndex];value.textContent=opt?opt.textContent:"Pilih opsi";menu.querySelectorAll("[role=option]").forEach(b=>{const active=b.dataset.value===sel.value;b.classList.toggle("selected",active);b.setAttribute("aria-selected",String(active));});};
+      [...sel.options].forEach(opt=>{const b=document.createElement("button");b.type="button";b.className="brand-select-option";b.setAttribute("role","option");b.dataset.value=opt.value;b.textContent=opt.textContent;b.onclick=()=>{sel.value=opt.value;sel.dispatchEvent(new Event("change",{bubbles:true}));sync();menu.hidden=true;trigger.setAttribute("aria-expanded","false");};menu.appendChild(b);});
+      trigger.onclick=()=>{const open=menu.hidden;document.querySelectorAll(".brand-select-menu").forEach(m=>m.hidden=true);document.querySelectorAll(".brand-select-trigger").forEach(t=>t.setAttribute("aria-expanded","false"));menu.hidden=!open;trigger.setAttribute("aria-expanded",String(open));};
+      sel.addEventListener("change",sync);wrap.append(trigger,menu);sync();
+    });
+    document.querySelectorAll('input[type="date"]:not([data-brand-enhanced])').forEach(input=>{
+      input.dataset.brandEnhanced="1";
+      const wrap=document.createElement("div");wrap.className="brand-date-wrap";
+      input.parentNode.insertBefore(wrap,input);wrap.appendChild(input);input.classList.add("brand-native-date");
+      const trigger=document.createElement("button");trigger.type="button";trigger.className="brand-date-trigger";trigger.setAttribute("aria-haspopup","dialog");trigger.setAttribute("aria-expanded","false");
+      const value=document.createElement("span"),icon=document.createElement("span");icon.className="brand-date-icon";icon.textContent="▦";trigger.append(value,icon);
+      const popup=document.createElement("div");popup.className="brand-calendar";popup.hidden=true;popup.setAttribute("role","dialog");popup.setAttribute("aria-label","Pilih tanggal");
+      const head=document.createElement("div");head.className="brand-calendar-head";const prev=document.createElement("button"),month=document.createElement("strong"),next=document.createElement("button");prev.type=next.type="button";prev.textContent="‹";next.textContent="›";head.append(prev,month,next);
+      const weekdays=document.createElement("div");weekdays.className="brand-calendar-weekdays";["Min","Sen","Sel","Rab","Kam","Jum","Sab"].forEach(d=>{const x=document.createElement("span");x.textContent=d;weekdays.appendChild(x);});
+      const days=document.createElement("div");days.className="brand-calendar-days";popup.append(head,weekdays,days);
+      let view=new Date((input.value||new Date().toISOString().slice(0,10))+"T12:00:00");if(Number.isNaN(view.getTime()))view=new Date();
+      const iso=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+      const draw=()=>{month.textContent=view.toLocaleDateString("id-ID",{month:"long",year:"numeric"});days.innerHTML="";const first=new Date(view.getFullYear(),view.getMonth(),1).getDay(),count=new Date(view.getFullYear(),view.getMonth()+1,0).getDate();for(let i=0;i<first;i++){const blank=document.createElement("span");blank.className="brand-calendar-blank";days.appendChild(blank);}for(let n=1;n<=count;n++){const d=new Date(view.getFullYear(),view.getMonth(),n),key=iso(d),b=document.createElement("button");b.type="button";b.className="brand-calendar-day";b.textContent=String(n);if(key===input.value)b.classList.add("selected");if(key===iso(new Date()))b.classList.add("today");b.onclick=()=>{input.value=key;input.dispatchEvent(new Event("input",{bubbles:true}));input.dispatchEvent(new Event("change",{bubbles:true}));sync();popup.hidden=true;trigger.setAttribute("aria-expanded","false");};days.appendChild(b);}};
+      const sync=()=>{value.textContent=fmtDate(input.value);view=new Date((input.value||new Date().toISOString().slice(0,10))+"T12:00:00");if(Number.isNaN(view.getTime()))view=new Date();draw();};
+      prev.onclick=()=>{view=new Date(view.getFullYear(),view.getMonth()-1,1);draw();};next.onclick=()=>{view=new Date(view.getFullYear(),view.getMonth()+1,1);draw();};
+      trigger.onclick=()=>{const open=popup.hidden;document.querySelectorAll(".brand-calendar").forEach(p=>p.hidden=true);document.querySelectorAll(".brand-date-trigger").forEach(t=>t.setAttribute("aria-expanded","false"));popup.hidden=!open;trigger.setAttribute("aria-expanded",String(open));if(open)sync();};
+      input.addEventListener("change",sync);wrap.append(trigger,popup);sync();
+    });
+  }
   function render(){if(!session())return renderAuth();const u=users().find(x=>x.username===session()?.username);if(!u){localStorage.removeItem(SESSION_KEY);return renderAuth();}if((u.role||"owner")==="owner")renderDashboard();else renderStaffDashboard();}
 
   render();
+  enhanceBrandControls();
+  const brandControlObserver=new MutationObserver(()=>enhanceBrandControls());
+  brandControlObserver.observe(document.getElementById('app')||document.body,{childList:true,subtree:true});
 })();
