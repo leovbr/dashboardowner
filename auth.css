@@ -450,3 +450,44 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 .waiter-home .staff-product-card,.waiter-home .online-order-product{box-sizing:border-box!important;overflow:hidden!important;padding:11px!important;gap:10px!important}
 .waiter-home .staff-product-bottom,.waiter-home .online-order-bottom{display:none!important}
 @media(max-width:380px){.waiter-home .staff-product-card,.waiter-home .online-order-product{padding:9px!important}.waiter-home .staff-unit-price{font-size:11px!important}.waiter-home .staff-step{width:31px!important;min-width:31px!important}.waiter-home .online-price-wrap span{font-size:10px!important}}
+
+/* Brand-matched native select and date controls */
+:root{color-scheme:dark}
+.field select,
+.field input[type="date"],
+.waiter-home select,
+.waiter-home input[type="date"]{
+  color-scheme:dark!important;
+  background-color:#0a1222!important;
+  color:#edf4ff!important;
+  border:1px solid #30415f!important;
+  border-radius:14px!important;
+  min-height:48px!important;
+  padding:12px 14px!important;
+  font:inherit!important;
+  font-size:15px!important;
+  font-weight:600!important;
+  accent-color:#4d91ff!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025)!important;
+}
+.field select:focus,
+.field input[type="date"]:focus,
+.waiter-home select:focus,
+.waiter-home input[type="date"]:focus{
+  outline:none!important;
+  border-color:#4b91ff!important;
+  box-shadow:0 0 0 3px rgba(77,145,255,.18)!important;
+}
+.field select option,
+.waiter-home select option{
+  background:#0a1222;
+  color:#edf4ff;
+}
+.field input[type="date"]::-webkit-calendar-picker-indicator,
+.waiter-home input[type="date"]::-webkit-calendar-picker-indicator{
+  cursor:pointer;
+  filter:invert(.82) sepia(.2) saturate(1.8) hue-rotate(180deg);
+  opacity:.95;
+}
+.waiter-home .online-price-wrap>span{display:none!important}
+.waiter-home .online-price-wrap{gap:0!important}
