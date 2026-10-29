@@ -518,3 +518,30 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 .brand-calendar-day.selected{background:linear-gradient(135deg,#4d91ff,#22c7e8);color:#061326;border-color:transparent;font-weight:850}
 .brand-select-menu[hidden],.brand-calendar[hidden]{display:none!important}
 @media(max-width:360px){.brand-calendar{padding:8px}.brand-calendar-weekdays,.brand-calendar-days{gap:2px}.brand-calendar-day{font-size:12px}.brand-select-trigger,.brand-date-trigger{padding:12px;font-size:14px}}
+
+/* Animated store branding in cashier navbar */
+.staff-brand-copy span#staffRoleLabel{display:none!important}
+.staff-brand-copy strong#staffStoreName{
+  display:block;
+  max-width: min(62vw, 340px);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  font-size:16px;
+  font-weight:800;
+  letter-spacing:.035em;
+  background:linear-gradient(100deg,#f2f7ff 0%,#8bb8ff 28%,#39d7ed 52%,#f2f7ff 74%,#8bb8ff 100%);
+  background-size:220% 100%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:storeBrandShimmer 5s ease-in-out infinite,storeBrandReveal .65s cubic-bezier(.2,.8,.2,1) both;
+}
+.staff-brand{animation:storeBrandEnter .55s cubic-bezier(.2,.8,.2,1) both}
+.staff-avatar{transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
+.staff-home-button:hover .staff-avatar{transform:translateY(-1px);border-color:#4d91ff;box-shadow:0 0 0 3px rgba(77,145,255,.12),0 8px 22px rgba(37,117,255,.12)}
+@keyframes storeBrandShimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes storeBrandReveal{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@keyframes storeBrandEnter{from{opacity:0;transform:translateX(-7px)}to{opacity:1;transform:translateX(0)}}
+@media(prefers-reduced-motion:reduce){.staff-brand,.staff-brand-copy strong#staffStoreName{animation:none!important}.staff-avatar{transition:none!important}}
+@media(max-width:520px){.staff-brand-copy strong#staffStoreName{font-size:15px;max-width:62vw}}
