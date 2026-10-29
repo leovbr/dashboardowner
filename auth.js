@@ -176,18 +176,37 @@
     document.getElementById("staffRoleLabel").textContent=page==="history"?"Riwayat Pesanan":stockPage?"Catat Stok":"Catat Pengeluaran";const floatingSummary=document.getElementById("cashierFloatingSummary");if(floatingSummary)floatingSummary.hidden=true;
     app.classList.remove("waiter-home");app.classList.add("waiter-subpage");
     const stock=getInventory(u.storeCode);
-    const stockContent='<p class="sub">Masukkan jumlah stok yang tersedia sekarang. Setelah disimpan, angka langsung diperbarui di Stok Owner untuk toko yang sama.</p><form id="waiterStockForm" class="staff-page-form">'+[
+    const stockItems=[
       {key:"mushrooms",label:"Jamur",unit:"porsi"},
       {key:"usus",label:"Usus",unit:"porsi"},
       {key:"sambalGeprek",label:"Sambal geprek",unit:"porsi"}
-    ].map(item=>'<label class="field"><span>'+item.label+' ('+item.unit+')</span><input type="number" min="0" step="1" inputmode="numeric" required id="waiter-stock-'+item.key+'" value="'+Math.max(0,Math.floor(Number(stock[item.key])||0))+'"></label>').join("")+'<p class="error" id="waiterStockError"></p><button class="btn" type="submit">Simpan Stok</button></form><div class="staff-page-list"><h3>Stok saat ini</h3>'+[
-      {key:"mushrooms",label:"Jamur",unit:"porsi"},
-      {key:"usus",label:"Usus",unit:"porsi"},
-      {key:"sambalGeprek",label:"Sambal geprek",unit:"porsi"}
-    ].map(item=>'<article class="staff-page-row"><div><b>'+item.label+'</b><small id="waiter-stock-current-'+item.key+'">Jumlah saat ini</small></div><strong>'+Math.max(0,Math.floor(Number(stock[item.key])||0))+' '+item.unit+'</strong></article>').join("")+'</div>';
+    ];
+    const stockContent='<p class="sub">Catat jumlah stok yang tersedia. Gunakan tombol + Tambah item untuk menambahkan jenis stok lain; stok akan disimpan ke inventaris Owner untuk toko yang sama.</p><form id="waiterStockForm" class="staff-page-form"><div id="waiterStockRows">'+stockItems.map(item=>'<div class="waiter-stock-row" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(90px,130px);gap:10px;align-items:end;margin-bottom:12px"><label class="field"><span>Nama stok</span><input class="waiter-stock-name" maxlength="100" required value="'+item.label+'" data-stock-key="'+item.key+'"></label><label class="field"><span>Jumlah ('+item.unit+')</span><input class="waiter-stock-qty" type="number" min="0" step="1" inputmode="numeric" required value="'+Math.max(0,Math.floor(Number(stock[item.key])||0))+'"></label></div>').join("")+'</div><button class="btn secondary" type="button" id="waiterAddStockRow">＋ Tambah item</button><p class="error" id="waiterStockError"></p><button class="btn" type="submit">Simpan Stok</button></form><div class="staff-page-list"><h3>Stok saat ini</h3>'+stockItems.map(item=>'<article class="staff-page-row"><div><b>'+item.label+'</b><small>'+item.unit+'</small></div><strong>'+Math.max(0,Math.floor(Number(stock[item.key])||0))+' '+item.unit+'</strong></article>').join("")+'</div>';
     app.innerHTML='<section class="staff-page"><button type="button" class="btn secondary staff-back-home" id="staffBackHome">← Kembali ke kasir</button><p class="eyebrow">'+(page==="history"?"RIWAYAT PESANAN":stockPage?"STOK TOKO":"PENGELUARAN")+'</p><h2>'+(page==="history"?"Riwayat Pesanan":stockPage?"Catat Stok":"Catat Pengeluaran")+'</h2>'+(stockPage?stockContent:page==="history"?(rows.map(x=>'<article class="staff-page-row"><div><b>'+escapeHtml(x.orderNumber||"Pesanan")+'</b><small>'+fmtDate(x)+' · '+escapeHtml((x.channel||"offline")==="online"?"Online · "+(x.platform||"Platform"):"Offline")+'</small><small>'+((x.items||[]).map(i=>escapeHtml(i.name)+" × "+Number(i.qty||0)).join(", "))+'</small></div><strong>'+money(x.total)+'</strong></article>').join("")||'<p class="sub">Belum ada pesanan.</p>'):'<form id="staffExpenseForm" class="staff-page-form"><label class="field"><span>Nama pengeluaran</span><input id="pageExpenseName" maxlength="120" required placeholder="Contoh: beli minyak goreng"></label><label class="field"><span>Jumlah pengeluaran (Rp)</span><input id="pageExpenseAmount" type="number" min="1" step="1" required inputmode="numeric" placeholder="25000"></label><label class="field"><span>Tanggal</span><input id="pageExpenseDate" type="date" value="'+new Date().toLocaleDateString("en-CA")+'" required></label><p class="error" id="pageExpenseError"></p><button class="btn" type="submit">Simpan Pengeluaran</button></form><div class="staff-page-list">'+(rows.map(x=>'<article class="staff-page-row"><div><b>'+escapeHtml(x.name)+'</b><small>'+fmtDate(x)+'</small></div><strong>'+money(x.amount)+'</strong></article>').join("")||'<p class="sub">Belum ada pengeluaran.</p>')+'</div>')+'</section>';
     document.getElementById("staffBackHome").onclick=renderStaffDashboard;
-    if(stockPage)document.getElementById("waiterStockForm").onsubmit=e=>{e.preventDefault();const values={mushrooms:"Jamur",usus:"Usus",sambalGeprek:"Sambal geprek"},patch={};for(const key of Object.keys(values)){const el=document.getElementById("waiter-stock-"+key),n=Number(el.value);if(!Number.isFinite(n)||n<0||!Number.isInteger(n)){document.getElementById("waiterStockError").textContent="Isi stok dengan angka bulat nol atau lebih.";return;}patch[key]=n;}setInventory(u.storeCode,patch);renderWaiterPage("stock");};
+    if(stockPage){
+      const stockRows=document.getElementById("waiterStockRows");
+      document.getElementById("waiterAddStockRow").onclick=()=>{
+        const row=document.createElement("div");row.className="waiter-stock-row";row.style.cssText="display:grid;grid-template-columns:minmax(0,1fr) minmax(90px,130px) auto;gap:10px;align-items:end;margin-bottom:12px";
+        row.innerHTML='<label class="field"><span>Nama stok</span><input class="waiter-stock-name" maxlength="100" required placeholder="Contoh: Minyak goreng"></label><label class="field"><span>Jumlah</span><input class="waiter-stock-qty" type="number" min="0" step="1" inputmode="numeric" required value="0"></label><button class="btn secondary waiter-stock-remove" type="button">Hapus</button>';
+        stockRows.appendChild(row);row.querySelector(".waiter-stock-remove").onclick=()=>row.remove();
+      };
+      document.getElementById("waiterStockForm").onsubmit=e=>{
+        e.preventDefault();const error=document.getElementById("waiterStockError"),patch={},custom=[];
+        const seen=new Set();let invalid=false;
+        stockRows.querySelectorAll(".waiter-stock-row").forEach(row=>{
+          const name=row.querySelector(".waiter-stock-name").value.trim(),qtyEl=row.querySelector(".waiter-stock-qty"),qty=Number(qtyEl.value),key=row.querySelector(".waiter-stock-name").dataset.stockKey;
+          if(!name||!Number.isInteger(qty)||qty<0){invalid=true;return;}
+          const normalized=name.toLowerCase();if(seen.has(normalized)){invalid=true;return;}seen.add(normalized);
+          if(key&&["mushrooms","usus","sambalGeprek"].includes(key))patch[key]=qty;
+          else custom.push({name,quantity:qty});
+        });
+        if(invalid){error.textContent="Periksa nama stok, jumlah harus angka bulat nol atau lebih, dan nama tidak boleh duplikat.";return;}
+        const current=getInventory(u.storeCode);setInventory(u.storeCode,{...patch,customItems:custom});
+        const logs=read("dashboardowner_waiter_stock_logs_v1",[]);logs.unshift({id:"waiter-stock-"+Date.now(),storeCode:u.storeCode,staffUsername:u.username,staffName:u.name,items:[...stockItems.filter(x=>Object.prototype.hasOwnProperty.call(patch,x.key)).map(x=>({name:x.label,quantity:patch[x.key]})),...custom],createdAt:new Date().toISOString(),date:new Date().toLocaleDateString("en-CA")});localStorage.setItem("dashboardowner_waiter_stock_logs_v1",JSON.stringify(logs));
+        renderWaiterPage("stock");
+      };
+    }
     if(page==="expenses")document.getElementById("staffExpenseForm").onsubmit=e=>{e.preventDefault();const name=document.getElementById("pageExpenseName").value.trim(),amount=Math.round(Number(document.getElementById("pageExpenseAmount").value)||0),date=document.getElementById("pageExpenseDate").value;if(!name||amount<1||!date){document.getElementById("pageExpenseError").textContent="Periksa nama, jumlah, dan tanggal pengeluaran.";return;}const all=read("dashboardowner_staff_expenses_v1",[]);all.unshift({id:"expense-"+Date.now(),date,name,amount,staffUsername:u.username,staffName:u.name,storeCode:u.storeCode,createdAt:new Date().toISOString()});localStorage.setItem("dashboardowner_staff_expenses_v1",JSON.stringify(all));renderWaiterPage("expenses");};
     document.getElementById("staffSideMenu").hidden=true;
   }
