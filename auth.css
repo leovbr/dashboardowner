@@ -491,3 +491,30 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 }
 .waiter-home .online-price-wrap>span{display:none!important}
 .waiter-home .online-price-wrap{gap:0!important}
+
+/* Fully custom store-branded dropdown and calendar */
+.brand-select-wrap,.brand-date-wrap{position:relative;width:100%;min-width:0}
+.brand-native-select,.brand-native-date{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;opacity:0!important;pointer-events:none!important;z-index:-1!important}
+.brand-select-trigger,.brand-date-trigger{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:50px;padding:13px 15px;border:1px solid #30415f;border-radius:15px;background:linear-gradient(145deg,#101b30,#080f1d);color:#edf4ff;font:inherit;font-size:15px;font-weight:650;text-align:left;cursor:pointer;box-sizing:border-box;box-shadow:inset 0 1px 0 rgba(255,255,255,.035);transition:border-color .15s,box-shadow .15s}
+.brand-select-trigger:focus-visible,.brand-date-trigger:focus-visible{outline:none;border-color:#4d91ff;box-shadow:0 0 0 3px rgba(77,145,255,.2)}
+.brand-select-arrow{font-size:23px;line-height:1;color:#a9c8ff}
+.brand-date-icon{font-size:22px;line-height:1;color:#8db9ff}
+.brand-select-menu,.brand-calendar{position:absolute;z-index:1000;left:0;right:0;top:calc(100% + 8px);padding:7px;border:1px solid #30466a;border-radius:16px;background:#0a1222;box-shadow:0 18px 44px rgba(0,0,0,.48);color:#edf4ff}
+.brand-select-menu{max-height:260px;overflow-y:auto}
+.brand-select-option{display:block;width:100%;padding:12px 13px;border:0;border-radius:10px;background:transparent;color:#dce8fb;font:inherit;font-size:14px;font-weight:600;text-align:left;cursor:pointer}
+.brand-select-option:hover,.brand-select-option:focus-visible{background:#15294a;outline:none}
+.brand-select-option.selected{background:linear-gradient(100deg,#245b9a,#1b4779);color:#fff}
+.brand-calendar{padding:12px;min-width:0}
+.brand-calendar-head{display:grid;grid-template-columns:40px minmax(0,1fr) 40px;align-items:center;gap:8px;margin-bottom:12px}
+.brand-calendar-head strong{text-align:center;text-transform:capitalize;font-size:15px;color:#f1f6ff}
+.brand-calendar-head button{height:38px;border:1px solid #2d4163;border-radius:11px;background:#111f36;color:#a9c8ff;font-size:25px;cursor:pointer}
+.brand-calendar-weekdays,.brand-calendar-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.brand-calendar-weekdays{margin-bottom:6px}
+.brand-calendar-weekdays span{text-align:center;color:#8ea2c2;font-size:11px;font-weight:750;padding:6px 0}
+.brand-calendar-day,.brand-calendar-blank{min-width:0;aspect-ratio:1/1}
+.brand-calendar-day{border:1px solid transparent;border-radius:10px;background:transparent;color:#dce8fb;font-size:13px;font-weight:600;cursor:pointer}
+.brand-calendar-day:hover{background:#15294a;border-color:#315888}
+.brand-calendar-day.today{border-color:#4d91ff;color:#9bc5ff}
+.brand-calendar-day.selected{background:linear-gradient(135deg,#4d91ff,#22c7e8);color:#061326;border-color:transparent;font-weight:850}
+.brand-select-menu[hidden],.brand-calendar[hidden]{display:none!important}
+@media(max-width:360px){.brand-calendar{padding:8px}.brand-calendar-weekdays,.brand-calendar-days{gap:2px}.brand-calendar-day{font-size:12px}.brand-select-trigger,.brand-date-trigger{padding:12px;font-size:14px}}
