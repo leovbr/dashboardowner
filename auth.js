@@ -96,9 +96,9 @@
     const chart=document.getElementById("revenueChart");if(!chart)return;
     const s=session(),u=users().find(x=>x.username===s?.username)||{},all=read("dashboardowner_staff_sales_v1",[]).filter(x=>!u.storeCode||x.storeCode===u.storeCode);
     const todayKey=businessDayKey(new Date()),today=new Date(todayKey+"T12:00:00"),keys=[];
-    for(let i=2;i>=0;i--){const d=new Date(today);d.setDate(d.getDate()-i);keys.push(localDateKey(d));}
+    for(let i=6;i>=0;i--){const d=new Date(today);d.setDate(d.getDate()-i);keys.push(localDateKey(d));}
     const totals=keys.map(key=>{let total=0;all.forEach(x=>{if(saleBusinessDay(x)===key){const ch=x.channel||"offline";if(source==="combined"||source===ch)total+=Number(x.total)||0;}});return {key,time:new Date(key+"T12:00:00").getTime(),total};});
-    const visible=totals.slice(-2),max=Math.max(1,...totals.map(x=>x.total))*1.16,h=250,stepX=76,left=50,right=18,w=Math.max(320,left+right+visible.length*stepX),padTop=14,padBottom=34,plotH=h-padTop-padBottom,barW=30,baseY=padTop+plotH,y=v=>baseY-(v/max)*plotH;
+    const visible=totals,max=Math.max(1,...totals.map(x=>x.total))*1.16,h=250,stepX=68,left=50,right=18,w=Math.max(320,left+right+visible.length*stepX),padTop=14,padBottom=34,plotH=h-padTop-padBottom,barW=30,baseY=padTop+plotH,y=v=>baseY-(v/max)*plotH;
     const fmtDate=t=>new Date(t).toLocaleDateString("id-ID",{day:"2-digit",month:"2-digit"});
     let svg='<svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="Grafik omzet harian '+source+'" width="'+w+'" height="'+h+'">';
     for(let k=0;k<4;k++){const val=max*(1-k/3),yy=y(val),label=val>=1000000?(val/1000000).toLocaleString("id-ID",{maximumFractionDigits:1})+"jt":Math.round(val/1000)+"rb";svg+='<line x1="'+left+'" y1="'+yy+'" x2="'+(w-right)+'" y2="'+yy+'" stroke="#26344b" stroke-dasharray="4 6"/><text x="'+(left-7)+'" y="'+(yy+3)+'" fill="#8292ac" text-anchor="end" font-size="10">'+label+'</text>';}
