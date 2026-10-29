@@ -393,3 +393,9 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 .waiter-home .online-order-bottom strong{overflow-wrap:anywhere}
 #cashierFloatingSummary[hidden]{display:none!important}
 @media(max-width:380px){.waiter-home .online-order-products{gap:8px!important}.waiter-home .online-order-product{padding:10px!important}.waiter-home .online-price-wrap input{padding:10px 7px!important}}
+
+/* Cashier totals are consolidated in the floating order summary */
+.waiter-home .staff-product-subtotal,
+.waiter-home .online-order-bottom strong[id^="online-subtotal-"]{display:none!important}
+.waiter-home .staff-product-bottom,
+.waiter-home .online-order-bottom{border-top:0!important;padding-top:0!important;min-height:0!important;margin-top:auto!important}
