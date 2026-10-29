@@ -123,6 +123,31 @@
     if(page==="expenses")document.getElementById("staffExpenseForm").onsubmit=e=>{e.preventDefault();const name=document.getElementById("pageExpenseName").value.trim(),amount=Math.round(Number(document.getElementById("pageExpenseAmount").value)||0),date=document.getElementById("pageExpenseDate").value;if(!name||amount<1||!date){document.getElementById("pageExpenseError").textContent="Periksa nama, jumlah, dan tanggal pengeluaran.";return;}const all=read("dashboardowner_staff_expenses_v1",[]);all.unshift({id:"expense-"+Date.now(),date,name,amount,staffUsername:u.username,staffName:u.name,storeCode:u.storeCode,createdAt:new Date().toISOString()});localStorage.setItem("dashboardowner_staff_expenses_v1",JSON.stringify(all));renderWaiterPage("expenses");};
     document.getElementById("staffSideMenu").hidden=true;
   }
+  function renderKitchenPage(page){
+    const s=session(),u=users().find(x=>x.username===s?.username);
+    if(!u||u.role!=="kitchen"){if(!u){localStorage.removeItem(SESSION_KEY);return renderAuth();}return renderStaffDashboard();}
+    const allExpenses=read("dashboardowner_staff_expenses_v1",[]).filter(x=>x.staffUsername===u.username||(!u.storeCode||x.storeCode===u.storeCode)&&x.role==="kitchen");
+    const allLogs=read("dashboardowner_kitchen_logs_v1",[]).filter(x=>x.staffUsername===u.username);
+    const fmtDate=x=>escapeHtml(x.date||"—");
+    document.getElementById("staffRoleLabel").textContent=page==="expenses"?"Catat Pengeluaran":"Riwayat Dapur";
+    app.classList.remove("waiter-home");app.classList.add("waiter-subpage");
+    const content=page==="expenses"
+      ? '<form id="kitchenExpenseForm" class="staff-page-form"><label class="field"><span>Nama pengeluaran dapur</span><input id="kitchenExpenseName" maxlength="120" required placeholder="Contoh: beli minyak goreng"></label><label class="field"><span>Jumlah pengeluaran (Rp)</span><input id="kitchenExpenseAmount" type="number" min="1" step="1" required inputmode="numeric" placeholder="25000"></label><label class="field"><span>Tanggal</span><input id="kitchenExpenseDate" type="date" value="'+new Date().toLocaleDateString("en-CA")+'" required></label><p class="error" id="kitchenExpenseError"></p><button class="btn" type="submit">Simpan Pengeluaran</button></form><div class="staff-page-list">'+(allExpenses.map(x=>'<article class="staff-page-row"><div><b>'+escapeHtml(x.name)+'</b><small>'+fmtDate(x)+' · '+escapeHtml(x.staffName||u.name||u.username)+'</small></div><strong>'+money(x.amount)+'</strong></article>').join("")||'<p class="sub">Belum ada pengeluaran dapur.</p>')+'</div>'
+      : (allLogs.map(x=>'<article class="staff-page-row"><div><b>'+fmtDate(x)+'</b><small>Ayam goreng: '+Number(x.chicken||0)+' potong · Bakso: '+Number(x.bakso||0)+' tusuk · Ceker: '+Number(x.ceker||0)+' · Ayam mentah tersisa: '+Number(x.rawChicken||0)+' potong</small></div></article>').join("")||'<p class="sub">Belum ada catatan dapur.</p>');
+    app.innerHTML='<section class="staff-page"><button type="button" class="btn secondary staff-back-home" id="kitchenBackHome">← Kembali ke Dashboard</button><p class="eyebrow">'+(page==="expenses"?"PENGELUARAN DAPUR":"RIWAYAT DAPUR")+'</p><h2>'+(page==="expenses"?"Catat Pengeluaran":"Riwayat Dapur")+'</h2>'+content+'</section>';
+    document.getElementById("kitchenBackHome").onclick=renderStaffDashboard;
+    const form=document.getElementById("kitchenExpenseForm");
+    if(form)form.onsubmit=e=>{
+      e.preventDefault();
+      const name=document.getElementById("kitchenExpenseName").value.trim(),amount=Math.round(Number(document.getElementById("kitchenExpenseAmount").value)||0),date=document.getElementById("kitchenExpenseDate").value;
+      if(!name||amount<1||!date){document.getElementById("kitchenExpenseError").textContent="Periksa nama, jumlah, dan tanggal pengeluaran.";return;}
+      const rows=read("dashboardowner_staff_expenses_v1",[]);
+      rows.unshift({id:"expense-"+Date.now(),date,name,amount,staffUsername:u.username,staffName:u.name,storeCode:u.storeCode,role:"kitchen",createdAt:new Date().toISOString()});
+      localStorage.setItem("dashboardowner_staff_expenses_v1",JSON.stringify(rows));
+      renderKitchenPage("expenses");
+    };
+    document.getElementById("staffSideMenu").hidden=true;
+  }
   function renderStaffDashboard(){
     const s=session(),u=users().find(x=>x.username===s?.username);if(!u){localStorage.removeItem(SESSION_KEY);return renderAuth();}
     document.getElementById("topbar").hidden=true;document.getElementById("brandIntro").hidden=true;document.getElementById("staffTopbar").hidden=false;
@@ -146,8 +171,23 @@
     app.classList.toggle("waiter-home",role==="waiter");app.classList.remove("waiter-subpage");
     const staffMenu=document.getElementById("staffSideMenu"),staffToggle=document.getElementById("staffMenuToggle"),staffHome=document.getElementById("staffHomeButton");
     if(staffHome)staffHome.onclick=()=>renderStaffDashboard();
-    if(staffToggle){staffToggle.hidden=role!=="waiter";staffToggle.onclick=e=>{e.stopPropagation();staffMenu.hidden=!staffMenu.hidden;staffToggle.setAttribute("aria-expanded",String(!staffMenu.hidden));};}
-    document.querySelectorAll("[data-staff-page]").forEach(b=>b.onclick=()=>{staffMenu.hidden=true;if(b.dataset.staffPage==="logout")logout();else renderWaiterPage(b.dataset.staffPage);});
+    if(staffToggle){
+      staffToggle.hidden=role!=="waiter"&&role!=="kitchen";
+      staffToggle.onclick=e=>{e.stopPropagation();staffMenu.hidden=!staffMenu.hidden;staffToggle.setAttribute("aria-expanded",String(!staffMenu.hidden));};
+    }
+    document.querySelectorAll("[data-staff-page]").forEach(b=>{
+      const targetRole=b.dataset.staffRole;
+      b.hidden=!!targetRole&&targetRole!==role;
+      b.onclick=()=>{
+        staffMenu.hidden=true;
+        staffToggle?.setAttribute("aria-expanded","false");
+        const page=b.dataset.staffPage;
+        if(page==="logout")logout();
+        else if(page==="home")renderStaffDashboard();
+        else if(role==="kitchen")renderKitchenPage(page==="kitchen-history"?"history":"expenses");
+        else renderWaiterPage(page);
+      };
+    });
 
     if(role==="waiter"){
       const offlinePanel=document.getElementById("offline-cashier-panel"),onlinePanel=document.getElementById("online-cashier-panel"),modeButtons=document.querySelectorAll("[data-cashier-mode]");
