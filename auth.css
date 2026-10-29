@@ -607,3 +607,14 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 .revenue-candle-detail strong{font-size:16px;color:#f1f5f9}
 .revenue-candle-detail>b{font-size:15px}
 .revenue-candle-detail>b small{font-size:12px;font-weight:500}
+
+
+/* Keep only the chart plot horizontally scrollable; details stay pinned below */
+.candle-chart{overflow:visible!important;max-width:100%;min-width:0}
+.revenue-chart-scroll{display:block;width:100%;max-width:100%;min-width:0;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;touch-action:pan-x;scrollbar-width:thin;scrollbar-color:#34435e transparent}
+.revenue-chart-scroll svg{display:block;width:auto;min-width:100%;max-width:none;height:250px;flex:none}
+.revenue-candle-detail{position:relative;display:grid;gap:4px;margin:10px 0 0;padding:10px 12px;border:1px solid #2a3a55;border-radius:12px;background:rgba(15,27,46,.96);min-width:0;max-width:100%;box-sizing:border-box}
+.revenue-candle-detail span,.revenue-candle-detail>small{font-size:11px;line-height:1.35}
+.revenue-candle-detail strong{font-size:14px;line-height:1.35}
+.revenue-candle-detail>b{font-size:13px;line-height:1.35}
+.revenue-candle-detail>b small{font-size:11px}
