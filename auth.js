@@ -258,3 +258,4 @@
   const brandControlObserver=new MutationObserver(()=>enhanceBrandControls());
   brandControlObserver.observe(document.getElementById('app')||document.body,{childList:true,subtree:true});
 })();
+// Pages redeploy trigger: Kitchen production form editable items, 2026-10-29.
