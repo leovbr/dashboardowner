@@ -399,3 +399,39 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 .waiter-home .online-order-bottom strong[id^="online-subtotal-"]{display:none!important}
 .waiter-home .staff-product-bottom,
 .waiter-home .online-order-bottom{border-top:0!important;padding-top:0!important;min-height:0!important;margin-top:auto!important}
+
+/* Final readability pass: clearer product cards and floating cashier summary */
+.waiter-home .staff-product-card,
+.waiter-home .online-order-product{padding:14px!important;gap:12px!important}
+.waiter-home .staff-product-top strong,
+.waiter-home .online-order-top strong{font-size:16px!important;line-height:1.45!important;font-weight:750!important;letter-spacing:0!important}
+.waiter-home .staff-qty-badge,
+.waiter-home .online-qty-label{font-size:14px!important;font-weight:750!important;min-width:42px;text-align:center;padding:8px 10px!important}
+.waiter-home .staff-unit-price,
+.waiter-home .online-price-wrap span{font-size:13px!important;line-height:1.45!important;font-weight:600!important;color:#b8c5dc!important}
+.waiter-home .staff-step,
+.waiter-home .online-stepper button{font-size:22px!important;font-weight:700!important;min-height:46px!important;min-width:44px!important}
+.waiter-home .staff-qty,
+.waiter-home .online-price-wrap input{font-size:16px!important;font-weight:600!important;min-height:46px!important}
+.waiter-home .cashier-mode-tabs button{font-size:15px!important;font-weight:700!important;min-height:46px!important}
+.waiter-home .field>span,
+.waiter-home label.field>span{font-size:14px!important;font-weight:650!important}
+.cashier-floating-summary{gap:12px!important;padding-top:16px!important;padding-bottom:calc(14px + env(safe-area-inset-bottom))!important}
+.cashier-summary-copy{gap:10px!important}
+.cashier-summary-heading{gap:14px!important;align-items:center!important}
+.cashier-summary-heading .cashier-summary-eyebrow{font-size:14px!important;line-height:1.45!important;letter-spacing:.045em!important;font-weight:750!important;color:#a9c2ff!important}
+.cashier-summary-heading .cashier-summary-details-toggle{font-size:28px!important;font-weight:800!important;min-width:42px!important;min-height:36px!important}
+.cashier-summary-line{gap:12px!important;align-items:center!important}
+.cashier-summary-line strong:first-child{font-size:15px!important;line-height:1.4!important;font-weight:700!important}
+.cashier-summary-line strong:last-child{font-size:clamp(21px,5vw,26px)!important;line-height:1.25!important;font-weight:800!important;letter-spacing:-.02em!important}
+.cashier-floating-summary .cashier-summary-submit{font-size:16px!important;font-weight:750!important;min-height:52px!important;padding:15px 16px!important;border-radius:16px!important}
+.cashier-summary-details .cashier-detail-row{font-size:14px!important;line-height:1.45!important}
+@media(max-width:520px){
+ .waiter-home .staff-product-card,.waiter-home .online-order-product{padding:12px!important}
+ .waiter-home .staff-product-top strong,.waiter-home .online-order-top strong{font-size:15px!important}
+ .cashier-floating-summary{gap:10px!important;padding:13px 16px calc(12px + env(safe-area-inset-bottom))!important}
+ .cashier-summary-heading .cashier-summary-eyebrow{font-size:13px!important}
+ .cashier-summary-line strong:first-child{font-size:14px!important}
+ .cashier-summary-line strong:last-child{font-size:22px!important}
+ .cashier-floating-summary .cashier-summary-submit{font-size:15px!important;min-height:50px!important}
+}
