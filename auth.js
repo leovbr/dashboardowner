@@ -105,8 +105,8 @@
           await loadCloudIdentity(data.user);render();
         }else{
           const payload={action:"login",username:String(fd.get("username")||"").trim().toLowerCase(),phone:String(fd.get("phone")||""),store_code:String(fd.get("store_code")||"").trim().toUpperCase(),pin:password};
-          const {data,error}=await sb.functions.invoke("staff-auth",{body:payload});if(error)throw error;if(data?.error)throw new Error(data.error);
-          const {data:sessionData,error:sessionError}=await sb.auth.setSession({access_token:data.access_token,refresh_token:data.refresh_token});if(sessionError)throw sessionError;
+          const {data,error}=await sb.functions.invoke("staff-login",{body:{username:payload.username,phone:payload.phone,businessCode:payload.store_code,pin:payload.pin}});if(error)throw error;if(data?.error)throw new Error(data.error);
+          const {data:sessionData,error:sessionError}=await sb.auth.setSession(data.session);if(sessionError)throw sessionError;
           await loadCloudIdentity(sessionData.user);render();
         }
       }catch(err){setError(err.message||"Login gagal. Periksa data akun.");}
