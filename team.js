@@ -1,70 +1,64 @@
 (() => {
   "use strict";
-  const USERS_KEY = "dashboardowner_proto_users_v1";
-  const ROLES = { manager: "Manager", kitchen: "Kitchen", waiter: "Waiter / Penjual" };
   const $ = id => document.getElementById(id);
-  const readUsers = () => { try { return JSON.parse(localStorage.getItem(USERS_KEY)) || []; } catch (_) { return []; } };
-  const saveUsers = list => localStorage.setItem(USERS_KEY, JSON.stringify(list));
   const esc = v => String(v == null ? "" : v).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-  const code = () => Math.random().toString(36).slice(2,6).toUpperCase() + Math.random().toString(36).slice(2,6).toUpperCase();
+  const roleNames = { manager: "Manager", kitchen: "Kitchen", waiter: "Waiter / Penjual" };
   const slug = v => v.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,".").replace(/^\.|\.$/g,"").slice(0,24) || "staff";
-  function styles() {
-    if ($("teamStyles")) return;
-    const s = document.createElement("style"); s.id = "teamStyles";
-    s.textContent = ".team-wrap{display:grid;gap:16px;margin:18px 0}.team-card{padding:18px;border:1px solid #263653;border-radius:18px;background:#0a1120}.team-heading{margin-bottom:15px}.team-heading h3{font-size:18px;margin-top:5px}.team-form{display:grid;gap:12px}.team-form label{display:grid;gap:6px;color:#9aabc4;font-size:12px}.team-form input,.team-form select{width:100%;box-sizing:border-box;padding:12px;border:1px solid #2a3855;border-radius:11px;background:#080f1d;color:#eef4ff;font:inherit}.team-note{font-size:12px;color:#8495ae;line-height:1.55;margin-top:12px}.team-list{display:grid;gap:9px}.team-row{display:grid;gap:12px;padding:13px;border:1px solid #25334e;border-radius:13px;background:#0b1424}.team-main b,.team-main small{display:block;overflow-wrap:anywhere}.team-main small{font-size:12px;color:#92a2bb;margin-top:4px}.team-actions{display:flex;gap:7px;flex-wrap:wrap}.team-actions button{flex:1;padding:9px 8px;border:1px solid #34435e;border-radius:9px;background:#111e33;color:#d7e4fb;font-size:12px}.team-credential{margin-top:12px;padding:14px;border-radius:12px;background:#102642;border:1px solid #284e78;line-height:1.8;overflow-wrap:anywhere}.team-credential code{font-weight:800;color:#c8dcff}.team-info-modal{position:fixed;inset:0;z-index:99999;background:#020812bb;display:grid;place-items:center;padding:18px}.team-info-dialog{width:min(430px,100%);background:#0b1a2b;border:1px solid #315073;border-radius:18px;padding:20px;color:#edf5ff}.team-info-dialog h3{margin-bottom:14px}.team-info-dialog p{padding:9px 0;border-bottom:1px solid #ffffff12;overflow-wrap:anywhere}.team-info-dialog button{margin-top:15px;width:100%}@media(min-width:760px){.team-wrap{grid-template-columns:1fr 1fr}.team-row{align-content:start}}";
+  const randomPin = () => Math.random().toString(36).slice(2,6).toUpperCase()+Math.random().toString(36).slice(2,6).toUpperCase();
+  function styles(){
+    if($("teamStyles"))return;
+    const s=document.createElement("style");s.id="teamStyles";
+    s.textContent=".team-wrap{display:grid;gap:16px;margin:18px 0}.team-card{padding:18px;border:1px solid #263653;border-radius:18px;background:#0a1120}.team-heading{margin-bottom:15px}.team-heading h3{font-size:18px;margin-top:5px}.team-form{display:grid;gap:12px}.team-form label{display:grid;gap:6px;color:#9aabc4;font-size:12px}.team-form input,.team-form select{width:100%;box-sizing:border-box;padding:12px;border:1px solid #2a3855;border-radius:11px;background:#080f1d;color:#eef4ff;font:inherit}.team-note{font-size:12px;color:#8495ae;line-height:1.55;margin-top:12px}.team-list{display:grid;gap:9px}.team-row{display:grid;gap:12px;padding:13px;border:1px solid #25334e;border-radius:13px;background:#0b1424}.team-main b,.team-main small{display:block;overflow-wrap:anywhere}.team-main small{font-size:12px;color:#92a2bb;margin-top:4px}.team-actions{display:flex;gap:7px;flex-wrap:wrap}.team-actions button{flex:1;padding:9px 8px;border:1px solid #34435e;border-radius:9px;background:#111e33;color:#d7e4fb;font-size:12px}.team-credential{margin-top:12px;padding:14px;border-radius:12px;background:#102642;border:1px solid #284e78;line-height:1.8;overflow-wrap:anywhere}.team-credential code{font-weight:800;color:#c8dcff}@media(min-width:760px){.team-wrap{grid-template-columns:1fr 1fr}.team-row{align-content:start}}";
     document.head.appendChild(s);
   }
-  function render() {
+  async function render(){
     styles();
-    const menu=$("sideMenu"); if(menu){menu.classList.remove("open");menu.setAttribute("aria-hidden","true");}
+    const menu=$("sideMenu");if(menu){menu.classList.remove("open");menu.setAttribute("aria-hidden","true");}
     const toggle=$("menuToggle");if(toggle)toggle.setAttribute("aria-expanded","false");
-    const app = $("app"); if (!app) return;
-    app.innerHTML = '<h2>Tim &amp; Akun</h2><div class="team-wrap"><section class="team-card"><div class="team-heading"><span class="eyebrow">BUAT AKUN</span><h3>Karyawan Baru</h3></div><form id="teamForm" class="team-form"><label>Nama karyawan<input id="teamName" required maxlength="80" placeholder="Contoh: Budi"></label><label>Bagian<select id="teamRole"><option value="manager">Manager</option><option value="kitchen">Kitchen</option><option value="waiter">Waiter / Penjual</option></select></label><label>Nomor WhatsApp<input id="teamPhone" type="tel" required maxlength="24" placeholder="08xxxxxxxxxx"></label><label>Kode toko / warung<input id="teamStore" required maxlength="40" placeholder="Contoh: AYAMKFC01"></label><button class="btn" type="submit">+ Buat Akun Karyawan</button></form><div id="teamCredential"></div></section><section class="team-card"><div class="team-heading"><span class="eyebrow">AKUN STAFF</span><h3 id="teamCount">0 akun</h3></div><div id="teamList" class="team-list"></div></section></div><button class="btn secondary" id="teamBack" type="button">Kembali ke Dashboard</button>';
-    $("teamBack").onclick = () => window.location.reload();
-    $("teamForm").onsubmit = e => {
+    const app=$("app");if(!app)return;
+    const sb=window.dashboardSupabase;
+    app.innerHTML='<h2>Tim &amp; Akun</h2><p class="sub">Memuat data tim dari Supabase...</p>';
+    const {data:{user}}=await sb.auth.getUser();
+    if(!user){app.innerHTML='<p class="error">Sesi owner tidak ditemukan. Silakan login ulang.</p>';return;}
+    const {data:owner,error}=await sb.from("profiles").select("store_id,role").eq("id",user.id).single();
+    if(error||owner.role!=="owner"||!owner.store_id){app.innerHTML='<p class="error">Akses halaman ini hanya untuk Owner.</p>';return;}
+    const {data:store}=await sb.from("stores").select("business_code,name").eq("id",owner.store_id).single();
+    app.innerHTML='<h2>Tim &amp; Akun</h2><div class="team-wrap"><section class="team-card"><div class="team-heading"><span class="eyebrow">BUAT AKUN</span><h3>Karyawan Baru</h3></div><form id="teamForm" class="team-form"><label>Nama karyawan<input id="teamName" required maxlength="80" placeholder="Contoh: Budi"></label><label>Username<input id="teamUsername" required minlength="3" maxlength="32" placeholder="Contoh: budi"></label><label>Bagian<select id="teamRole"><option value="manager">Manager</option><option value="kitchen">Kitchen</option><option value="waiter">Waiter / Penjual</option></select></label><label>Nomor WhatsApp<input id="teamPhone" type="tel" required maxlength="24" placeholder="08xxxxxxxxxx"></label><label>Kode toko<input value="'+esc(store?.business_code||"")+'" readonly></label><button class="btn" type="submit">+ Buat Akun Karyawan</button></form><div id="teamCredential"></div></section><section class="team-card"><div class="team-heading"><span class="eyebrow">AKUN STAFF</span><h3 id="teamCount">0 akun</h3></div><div id="teamList" class="team-list">Memuat...</div></section></div><button class="btn secondary" id="teamBack" type="button">Kembali ke Dashboard</button>';
+    $("teamBack").onclick=()=>window.location.reload();
+    $("teamForm").onsubmit=async e=>{
       e.preventDefault();
-      const name=$("teamName").value.trim(), role=$("teamRole").value, phone=$("teamPhone").value.trim(), store=$("teamStore").value.trim().toUpperCase();
-      if(!name||!phone||!store)return;
-      const list=readUsers(); let base=slug(name),username=base,n=2;
-      while(list.some(u=>u.username===username)) username=base+n++;
-      const password=code();
-      list.push({id:"staff-"+Date.now().toString(36),username,password,role,name,phone,storeCode:store,createdBy:(JSON.parse(localStorage.getItem("dashboardowner_proto_session_v1")||"{}").username||""),createdAt:new Date().toISOString(),active:true});
-      saveUsers(list);
-      $("teamCredential").innerHTML='<div class="team-credential"><b>AKUN BERHASIL DIBUAT</b><br>Username: <code>'+esc(username)+'</code><br>Password: <code>'+esc(password)+'</code><br>Bagian: <b>'+esc(ROLES[role])+'</b><br>Kode toko: <code>'+esc(store)+'</code><p class="team-note">Simpan kredensial ini dan berikan kepada karyawan.</p></div>';
-      e.currentTarget.reset(); drawList();
+      const name=$("teamName").value.trim(),username=$("teamUsername").value.trim().toLowerCase(),role=$("teamRole").value,phone=$("teamPhone").value.trim(),pin=randomPin(),button=e.currentTarget.querySelector("button[type=submit]");
+      if(!/^[a-z0-9._-]{3,32}$/.test(username)){alert("Username 3–32 karakter: huruf kecil, angka, titik, _ atau -.");return;}
+      button.disabled=true;button.textContent="Membuat akun...";
+      try{
+        const {data,error}=await sb.functions.invoke("staff-admin",{body:{action:"create",name,username,role,phone,businessCode:store.business_code,pin}});
+        if(error)throw error;if(data?.error)throw new Error(data.error);
+        $("teamCredential").innerHTML='<div class="team-credential"><b>AKUN BERHASIL DIBUAT</b><br>Username: <code>'+esc(username)+'</code><br>PIN awal: <code>'+esc(pin)+'</code><br>Bagian: <b>'+esc(roleNames[role])+'</b><br>Kode toko: <code>'+esc(store.business_code)+'</code><p class="team-note">Simpan kredensial ini dan berikan kepada karyawan. PIN hanya ditampilkan sekarang.</p></div>';
+        e.currentTarget.reset();await drawList(sb,owner.store_id);
+      }catch(err){alert(err.message||"Gagal membuat akun staff.");}
+      finally{button.disabled=false;button.textContent="+ Buat Akun Karyawan";}
     };
-    drawList();
+    await drawList(sb,owner.store_id);
   }
-  function drawList() {
-    const el=$("teamList"); if(!el)return;
-    const list=readUsers().filter(u=>u.role && u.role!=="owner");
-    $("teamCount").textContent=list.length+" akun";
-    el.innerHTML=list.length?list.map(u=>'<div class="team-row"><div class="team-main"><b>'+esc(u.name||u.username)+'</b><small>'+esc(ROLES[u.role]||u.role)+' · '+esc(u.phone||"-")+' · Toko '+esc(u.storeCode||"-")+'</small><small>Status: '+(u.active===false?"Nonaktif":"Aktif")+'</small></div><div class="team-actions"><button type="button" data-team-info="'+esc(u.username)+'">Info</button><button type="button" data-team-reset="'+esc(u.username)+'">Reset Password</button><button type="button" data-team-toggle="'+esc(u.username)+'">'+(u.active===false?"Aktifkan":"Nonaktifkan")+'</button></div></div>').join(""):'<div class="empty-state">Belum ada akun karyawan.</div>';
-    el.querySelectorAll("[data-team-info]").forEach(b=>b.onclick=()=>showInfo(b.dataset.teamInfo));
-    el.querySelectorAll("[data-team-reset]").forEach(b=>b.onclick=()=>resetPassword(b.dataset.teamReset));
-    el.querySelectorAll("[data-team-toggle]").forEach(b=>b.onclick=()=>toggleStaff(b.dataset.teamToggle));
+  async function drawList(sb,storeId){
+    const el=$("teamList");if(!el)return;
+    const {data:list,error}=await sb.from("profiles").select("id,full_name,username,phone,role,is_active").eq("store_id",storeId).neq("role","owner").order("created_at",{ascending:false});
+    if(error){el.textContent="Gagal memuat akun staff: "+error.message;return;}
+    $("teamCount").textContent=(list||[]).length+" akun";
+    el.innerHTML=list?.length?list.map(u=>'<div class="team-row"><div class="team-main"><b>'+esc(u.full_name||u.username)+'</b><small>'+esc(roleNames[u.role]||u.role)+' · '+esc(u.phone||"-")+'</small><small>Status: '+(u.is_active?"Aktif":"Nonaktif")+' · Username: '+esc(u.username)+'</small></div><div class="team-actions"><button type="button" data-reset="'+esc(u.id)+'">Reset PIN</button><button type="button" data-toggle="'+esc(u.id)+'" data-active="'+(!u.is_active)+'">'+(u.is_active?"Nonaktifkan":"Aktifkan")+'</button></div></div>').join(""):'<p class="team-note">Belum ada akun staff.</p>';
+    el.querySelectorAll("[data-reset]").forEach(b=>b.onclick=async()=>{
+      if(!confirm("Reset PIN akun ini? PIN baru akan ditampilkan sekali."))return;
+      const pin=randomPin();const {data,error}=await sb.functions.invoke("staff-admin",{body:{action:"reset_pin",staffId:b.dataset.reset,pin}});
+      if(error||data?.error){alert(error?.message||data?.error||"Gagal reset PIN.");return;}
+      alert("PIN baru: "+pin+"\nSimpan dan berikan kepada karyawan.");
+    });
+    el.querySelectorAll("[data-toggle]").forEach(b=>b.onclick=async()=>{
+      const active=b.dataset.active==="true";if(!confirm((active?"Aktifkan":"Nonaktifkan")+" akun staff ini?"))return;
+      const {data,error}=await sb.functions.invoke("staff-admin",{body:{action:"toggle",staffId:b.dataset.toggle,active}});
+      if(error||data?.error){alert(error?.message||data?.error||"Gagal memperbarui akun.");return;}
+      await drawList(sb,storeId);
+    });
   }
-  function showInfo(username) {
-    const u=readUsers().find(x=>x.username===username);if(!u)return;
-    const m=document.createElement("div");m.className="team-info-modal";
-    m.innerHTML='<section class="team-info-dialog"><h3>Informasi Akun</h3><p><b>Nama:</b> '+esc(u.name||"-")+'</p><p><b>Bagian:</b> '+esc(ROLES[u.role]||u.role||"-")+'</p><p><b>WhatsApp:</b> '+esc(u.phone||"-")+'</p><p><b>Kode toko:</b> '+esc(u.storeCode||"-")+'</p><p><b>Username:</b> '+esc(u.username)+'</p><p><b>Password:</b> <code id="teamInfoPassword">'+esc(u.password||"Tidak tersedia")+'</code></p><button class="btn" id="teamCopyPassword" type="button">Salin Password</button><button class="btn secondary" id="teamCloseInfo" type="button">Tutup</button></section>';
-    document.body.appendChild(m);
-    m.querySelector("#teamCopyPassword").onclick=async()=>{const password=String(u.password||"");if(!password){alert("Password tidak tersedia untuk akun ini.");return;}try{await navigator.clipboard.writeText(password);alert("Password berhasil disalin.");}catch(e){const ta=document.createElement("textarea");ta.value=password;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();const ok=document.execCommand("copy");ta.remove();alert(ok?"Password berhasil disalin.":"Gagal menyalin password.");}};
-    m.querySelector("#teamCloseInfo").onclick=()=>m.remove();m.onclick=e=>{if(e.target===m)m.remove();};
-  }
-  function resetPassword(username) {
-    const list=readUsers(),u=list.find(x=>x.username===username);if(!u)return;
-    const password=code();u.password=password;saveUsers(list);
-    alert("Password baru untuk "+u.name+":\n\n"+password);
-  }
-  function toggleStaff(username) {
-    const list=readUsers(),u=list.find(x=>x.username===username);if(!u)return;
-    const disable=u.active!==false;
-    if(!confirm((disable?"Nonaktifkan":"Aktifkan")+" akun "+u.name+"?"))return;
-    u.active=!disable;saveUsers(list);drawList();
-  }
-  document.addEventListener("click",e=>{
-    const b=e.target.closest('[data-nav="team"]');if(b){e.preventDefault();e.stopPropagation();render();}
-  },true);
+  document.addEventListener("click",e=>{const b=e.target.closest('[data-nav="team"]');if(b){e.preventDefault();e.stopPropagation();render();}},true);
   window.addEventListener("dashboardowner:team",render);
 })();
