@@ -4,7 +4,7 @@
   const esc = v => String(v == null ? "" : v).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const roleNames = { manager: "Manager", kitchen: "Kitchen", waiter: "Waiter / Penjual" };
   const slug = v => v.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,".").replace(/^\.|\.$/g,"").slice(0,24) || "staff";
-  const randomPin = () => Math.random().toString(36).slice(2,6).toUpperCase()+Math.random().toString(36).slice(2,6).toUpperCase();
+  const randomPin = () => { const bytes=new Uint8Array(10); crypto.getRandomValues(bytes); const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; return Array.from(bytes,b=>chars[b%chars.length]).join(""); };
   function styles(){
     if($("teamStyles"))return;
     const s=document.createElement("style");s.id="teamStyles";
