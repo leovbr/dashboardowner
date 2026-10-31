@@ -51,31 +51,66 @@
   const money=v=>"Rp"+Math.round(Number(v)||0).toLocaleString("id-ID");
   const escapeHtml=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const setError=msg=>{const e=document.getElementById("error");if(e)e.textContent=msg||"";};
+  function cloud(){return window.dashboardSupabase;}
+  async function loadCloudIdentity(user){
+    if(!user)return null;
+    const sb=cloud();
+    const {data:profileRow,error}=await sb.from("profiles").select("*").eq("id",user.id).single();
+    if(error||!profileRow)throw new Error("Profil akun belum tersedia. Hubungi owner atau coba lagi.");
+    let store={};
+    if(profileRow.store_id){
+      const result=await sb.from("stores").select("id,name,business_code").eq("id",profileRow.store_id).single();
+      if(result.error)throw result.error;
+      store=result.data||{};
+    }
+    const identity={id:user.id,username:profileRow.username||user.email||user.id,name:profileRow.full_name||"Pengguna",email:user.email||"",phone:profileRow.phone||"",role:profileRow.role||"owner",storeCode:store.business_code||"",storeName:store.name||"",active:profileRow.is_active!==false};
+    localStorage.setItem(USERS_KEY,JSON.stringify([identity]));
+    localStorage.setItem(SESSION_KEY,JSON.stringify({username:identity.username,role:identity.role,signedInAt:new Date().toISOString(),userId:user.id}));
+    localStorage.setItem(PROFILE_KEY,JSON.stringify({ownerName:identity.name,businessName:identity.storeName,businessPhone:identity.phone,avatar:""}));
+    return identity;
+  }
   function renderAuth(){
     document.getElementById("topbar").hidden=true;document.getElementById("staffTopbar").hidden=true;document.getElementById("brandIntro").hidden=false;
     const intro=document.getElementById("brandIntro");
     intro.querySelector("h1").innerHTML='Dashboard<span>Owner</span>';
     intro.querySelector(".muted").textContent="Satu ruang untuk memantau dan mengelola usaha.";
-    app.innerHTML='<h2>'+(mode==="login"?"Selamat datang":"Buat akun owner")+'</h2><p class="sub">'+(mode==="login"?"Masuk sesuai jenis akun untuk melanjutkan.":"Buat akun lokal untuk menguji alur autentikasi.")+'</p><form id="auth-form" novalidate>'+(mode==="login"?'<label class="field"><span>Masuk sebagai</span><select name="role" id="login-role"><option value="owner">Owner</option><option value="manager">Manager</option><option value="kitchen">Kitchen</option><option value="waiter">Waiter / Penjual</option></select></label>':'<label class="field"><span>Nama owner</span><input name="name" autocomplete="name" maxlength="60" required placeholder="Nama kamu"></label>')+'<label class="field"><span>Username</span><input name="username" autocomplete="username" minlength="3" maxlength="32" required placeholder="Masukkan username"></label><label class="field"><span>Password</span><input name="password" type="password" autocomplete="'+(mode==="login"?"current-password":"new-password")+'" minlength="6" required placeholder="Minimal 6 karakter"></label><p id="error" class="error" role="alert"></p><button class="btn" type="submit">'+(mode==="login"?"Masuk":"Buat akun")+'</button></form><button id="switch-mode" class="switch" type="button">'+(mode==="login"?"Belum punya akun? Buat akun":"Sudah punya akun? Login")+'</button><div class="notice">Prototype lokal: akun dan produk tersimpan di browser ini. Belum tersinkron ke cloud; jangan gunakan password asli atau data sensitif.</div>';
-    const roleSelect=document.getElementById("login-role");if(roleSelect)roleSelect.value=selectedRole;
-    if(roleSelect)roleSelect.onchange=()=>{selectedRole=roleSelect.value;const introTitle=intro.querySelector("h1"),sub=intro.querySelector(".muted");const labels={owner:["Dashboard<span>Owner</span>","Satu ruang untuk memantau dan mengelola usaha."],manager:["Dashboard<span>Manager</span>","Pantau operasional usaha dan laporan tim."],kitchen:["Dashboard<span>Kitchen</span>","Catat aktivitas dapur, produksi, dan kebutuhan stok."],waiter:["Dashboard<span>Penjual</span>","Catat transaksi dan pantau penjualan harian."]};introTitle.innerHTML=labels[selectedRole][0];sub.textContent=labels[selectedRole][1];};
+    const ownerFields=mode==="register"
+      ? '<label class="field"><span>Nama owner</span><input name="name" autocomplete="name" maxlength="80" required placeholder="Nama kamu"></label><label class="field"><span>Nama usaha</span><input name="business_name" maxlength="100" required placeholder="Nama toko / warung"></label><label class="field"><span>Email</span><input name="email" type="email" autocomplete="email" required placeholder="nama@email.com"></label>'
+      : '<label class="field"><span>Email owner</span><input name="email" type="email" autocomplete="username" required placeholder="nama@email.com"></label>';
+    const staffFields='<label class="field"><span>Username</span><input name="username" autocomplete="username" minlength="3" maxlength="32" required placeholder="Username staff"></label><label class="field"><span>Nomor WhatsApp</span><input name="phone" type="tel" autocomplete="tel" required placeholder="08xxxxxxxxxx"></label><label class="field"><span>Kode toko</span><input name="store_code" required maxlength="40" placeholder="Kode dari owner"></label>';
+    app.innerHTML='<h2>'+(mode==="login"?"Selamat datang":"Daftarkan akun owner")+'</h2><p class="sub">'+(mode==="login"?"Masuk menggunakan akun cloud.":"Buat akun owner yang tersimpan aman di Supabase Auth.")+'</p><form id="auth-form" novalidate>'+(mode==="login"?'<label class="field"><span>Masuk sebagai</span><select name="role" id="login-role"><option value="owner">Owner</option><option value="manager">Manager</option><option value="kitchen">Kitchen</option><option value="waiter">Waiter / Penjual</option></select></label>':'')+(mode==="register"?ownerFields:('<div id="owner-login-fields">'+ownerFields+'</div><div id="staff-login-fields" hidden>'+staffFields+'</div>'))+'<label class="field"><span>'+(mode==="login"&&selectedRole!=="owner"?"PIN / Password":"Password")+'</span><input name="password" type="password" autocomplete="'+(mode==="login"?"current-password":"new-password")+'" minlength="6" required placeholder="Minimal 6 karakter"></label><p id="error" class="error" role="alert"></p><button class="btn" type="submit">'+(mode==="login"?"Masuk":"Buat akun owner")+'</button></form><button id="switch-mode" class="switch" type="button">'+(mode==="login"?"Belum punya akun owner? Daftar":"Sudah punya akun? Login")+'</button><div class="notice">Akun dikelola melalui Supabase Auth. Akun staff dibuat oleh owner. Data lama di browser tidak dihapus.</div>';
+    const roleSelect=document.getElementById("login-role");
+    if(roleSelect){
+      roleSelect.value=selectedRole;
+      const syncFields=()=>{selectedRole=roleSelect.value;const owner=document.getElementById("owner-login-fields"),staff=document.getElementById("staff-login-fields"),passwordLabel=document.querySelector('#auth-form label.field:last-of-type span');owner.hidden=selectedRole!=="owner";staff.hidden=selectedRole==="owner";if(passwordLabel)passwordLabel.textContent=selectedRole==="owner"?"Password":"PIN / Password";};
+      roleSelect.onchange=syncFields;syncFields();
+    }
     document.getElementById("switch-mode").onclick=()=>{mode=mode==="login"?"register":"login";renderAuth();};
-    document.getElementById("auth-form").onsubmit=e=>{
-      e.preventDefault();const fd=new FormData(e.currentTarget),username=String(fd.get("username")||"").trim().toLowerCase(),password=String(fd.get("password")||"");
-      if(!/^[a-z0-9._-]{3,32}$/.test(username))return setError("Username 3–32 karakter: huruf, angka, titik, _ atau -.");
+    document.getElementById("auth-form").onsubmit=async e=>{
+      e.preventDefault();const fd=new FormData(e.currentTarget),password=String(fd.get("password")||""),sb=cloud();
+      if(!sb)return setError("Koneksi Supabase belum siap. Muat ulang halaman.");
       if(password.length<6)return setError("Password minimal 6 karakter.");
-      const list=users();let u;
-      if(mode==="register"){
-        const name=String(fd.get("name")||"").trim();if(!name)return setError("Nama owner wajib diisi.");
-        if(list.some(x=>x.username===username))return setError("Username sudah digunakan di browser ini.");
-        u={username,password,name,role:"owner",active:true,createdAt:new Date().toISOString()};list.push(u);localStorage.setItem(USERS_KEY,JSON.stringify(list));localStorage.setItem(PROFILE_KEY,JSON.stringify({ownerName:name,businessName:"",businessPhone:"",businessDesc:"",avatar:""}));
-      }else{
-        const role=String(fd.get("role")||"owner");
-        u=list.find(x=>x.username===username&&x.password===password&&((x.role||"owner")===role));
-        if(!u)return setError("Username, password, atau jenis akun tidak cocok.");
-        if(u.active===false)return setError("Akun ini sudah dinonaktifkan.");
-      }
-      localStorage.setItem(SESSION_KEY,JSON.stringify({username:u.username,role:u.role||"owner",signedInAt:new Date().toISOString()}));render();
+      const submit=e.currentTarget.querySelector('button[type="submit"]');submit.disabled=true;submit.textContent="Memproses...";
+      try{
+        if(mode==="register"){
+          const name=String(fd.get("name")||"").trim(),businessName=String(fd.get("business_name")||"").trim(),email=String(fd.get("email")||"").trim().toLowerCase();
+          if(!name||!businessName||!email)throw new Error("Nama owner, nama usaha, dan email wajib diisi.");
+          const {data,error}=await sb.auth.signUp({email,password,options:{data:{full_name:name,business_name:businessName}}});
+          if(error)throw error;
+          if(data.session){await loadCloudIdentity(data.user);render();}
+          else setError("Pendaftaran berhasil. Cek email untuk verifikasi, lalu login.");
+        }else if(selectedRole==="owner"){
+          const email=String(fd.get("email")||"").trim().toLowerCase();
+          const {data,error}=await sb.auth.signInWithPassword({email,password});if(error)throw error;
+          await loadCloudIdentity(data.user);render();
+        }else{
+          const payload={action:"login",username:String(fd.get("username")||"").trim().toLowerCase(),phone:String(fd.get("phone")||""),store_code:String(fd.get("store_code")||"").trim().toUpperCase(),pin:password};
+          const {data,error}=await sb.functions.invoke("staff-auth",{body:payload});if(error)throw error;if(data?.error)throw new Error(data.error);
+          const {data:sessionData,error:sessionError}=await sb.auth.setSession({access_token:data.access_token,refresh_token:data.refresh_token});if(sessionError)throw sessionError;
+          await loadCloudIdentity(sessionData.user);render();
+        }
+      }catch(err){setError(err.message||"Login gagal. Periksa data akun.");}
+      finally{if(submit.isConnected){submit.disabled=false;submit.textContent=mode==="login"?"Masuk":"Buat akun owner";}}
     };
   }
   function renderDashboard(){
@@ -173,7 +208,7 @@
   function openSettings(){const s=session(),u=users().find(x=>x.username===s?.username)||{},p=profile(),m=modal("Pengaturan Akun",'<div class="ac-item"><b>Akun aktif</b><div class="ac-note">'+escapeHtml(u.username||"—")+'</div></div><div class="ac-item"><b>Pemilik</b><div class="ac-note">'+escapeHtml(p.ownerName||u.name||"Belum diatur")+'</div></div><div class="ac-item"><b>Penyimpanan</b><div class="ac-note">Saat ini lokal di browser ini; sinkronisasi cloud belum aktif.</div></div><div class="ac-actions"><button class="btn secondary" id="changePassword" type="button">Ubah Password</button></div>');m.querySelector("#changePassword").onclick=()=>{m.remove();openChangePassword();};}
   function openChangePassword(){const m=modal("Ubah Password",'<form id="passwordForm" class="ac-form"><label>Password saat ini<input id="oldPassword" type="password" required></label><label>Password baru<input id="newPassword" type="password" required minlength="6"></label><label>Ulangi password baru<input id="confirmPassword" type="password" required minlength="6"></label><p id="passwordError" class="error" role="alert"></p><button class="btn" type="submit">Simpan Password</button></form>');m.querySelector("#passwordForm").onsubmit=e=>{e.preventDefault();const u=users().find(x=>x.username===session()?.username),list=users(),err=m.querySelector("#passwordError"),old=m.querySelector("#oldPassword").value,n=m.querySelector("#newPassword").value,c=m.querySelector("#confirmPassword").value;if(!u||u.password!==old){err.textContent="Password saat ini tidak cocok.";return;}if(n.length<6||n!==c){err.textContent="Password baru minimal 6 karakter dan harus sama dengan konfirmasi.";return;}u.password=n;localStorage.setItem(USERS_KEY,JSON.stringify(list));m.remove();alert("Password diperbarui di browser ini.");};}
   function exportProductsCSV(){const rows=[["Nama Produk","Harga"],...products().map(p=>[p.name,p.price])];const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(",")).join("\r\n"),url=URL.createObjectURL(new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8"})),a=document.createElement("a");a.href=url;a.download="katalog-produk.csv";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-  function logout(){localStorage.removeItem(SESSION_KEY);document.getElementById("account-popover")?.remove();document.querySelector(".ac-modal")?.remove();mode="login";renderAuth();}
+  function logout(){cloud()?.auth.signOut();localStorage.removeItem(SESSION_KEY);localStorage.removeItem(USERS_KEY);document.getElementById("account-popover")?.remove();document.querySelector(".ac-modal")?.remove();mode="login";renderAuth();}
   function renderWaiterPage(page){
     const s=session(),u=users().find(x=>x.username===s?.username);if(!u){localStorage.removeItem(SESSION_KEY);return renderAuth();}
     const sales=read("dashboardowner_staff_sales_v1",[]).filter(x=>x.staffUsername===u.username),expenses=read("dashboardowner_staff_expenses_v1",[]).filter(x=>x.staffUsername===u.username),rows=page==="history"?sales:expenses,fmtDate=x=>escapeHtml(x.date||"—");
@@ -339,9 +374,19 @@
   }
   function render(){if(!session())return renderAuth();const u=users().find(x=>x.username===session()?.username);if(!u){localStorage.removeItem(SESSION_KEY);return renderAuth();}if((u.role||"owner")==="owner")renderDashboard();else renderStaffDashboard();}
 
-  render();
-  enhanceBrandControls();
-  const brandControlObserver=new MutationObserver(()=>enhanceBrandControls());
-  brandControlObserver.observe(document.getElementById('app')||document.body,{childList:true,subtree:true});
+  (async()=>{
+    const sb=cloud();
+    if(!sb){renderAuth();return;}
+    const {data:{session:activeSession}}=await sb.auth.getSession();
+    if(activeSession){try{await loadCloudIdentity(activeSession.user);render();}catch(err){console.error(err);renderAuth();}}
+    else {localStorage.removeItem(SESSION_KEY);renderAuth();}
+    sb.auth.onAuthStateChange(async(event,sessionValue)=>{
+      if(event==="SIGNED_OUT"){localStorage.removeItem(SESSION_KEY);localStorage.removeItem(USERS_KEY);renderAuth();}
+      else if(sessionValue&&event==="SIGNED_IN"){try{await loadCloudIdentity(sessionValue.user);render();}catch(err){console.error(err);}}
+    });
+    enhanceBrandControls();
+    const brandControlObserver=new MutationObserver(()=>enhanceBrandControls());
+    brandControlObserver.observe(document.getElementById('app')||document.body,{childList:true,subtree:true});
+  })();
 })();
 // Pages redeploy trigger: Kitchen production form editable items, 2026-10-29.
