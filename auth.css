@@ -618,3 +618,10 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
 .revenue-candle-detail strong{font-size:14px;line-height:1.35}
 .revenue-candle-detail>b{font-size:13px;line-height:1.35}
 .revenue-candle-detail>b small{font-size:11px}
+
+/* Unified store identity for Owner and embedded Staff navigation */
+.top-brand span{min-width:0;display:block}
+.top-brand b#topbarBusinessName{font-size:clamp(18px,2.3vw,23px)!important;font-weight:950!important;letter-spacing:-.035em!important;line-height:1.15!important;max-width:min(66vw,520px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:linear-gradient(100deg,#f2f7ff 0%,#91baff 42%,#c5a6ff 72%,#f2f7ff 100%);background-size:220% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:storeBrandShimmer 5s ease-in-out infinite,storeBrandReveal .65s cubic-bezier(.2,.8,.2,1) both;text-shadow:0 0 22px #78aaff25}
+.top-brand small{font-size:10px!important;font-weight:850!important;letter-spacing:.22em!important;color:#91a8cc!important;text-transform:uppercase!important;margin-top:3px}
+@media(max-width:520px){.top-brand b#topbarBusinessName{font-size:19px!important;max-width:68vw}}
+@media(prefers-reduced-motion:reduce){.top-brand b#topbarBusinessName{animation:none!important}}
