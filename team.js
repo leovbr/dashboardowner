@@ -2,7 +2,7 @@
   "use strict";
   const $ = id => document.getElementById(id);
   const esc = v => String(v == null ? "" : v).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-  const roleNames = { manager: "Manager", kitchen: "Kitchen", waiter: "Waiter / Penjual" };
+  const roleNames = { kitchen: "Kitchen", waiter: "Waiter / Penjual" };
   const slug = v => v.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,".").replace(/^\.|\.$/g,"").slice(0,24) || "staff";
   const randomPin = () => { const bytes=new Uint8Array(10); crypto.getRandomValues(bytes); const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; return Array.from(bytes,b=>chars[b%chars.length]).join(""); };
   function styles(){
@@ -23,7 +23,7 @@
     const {data:owner,error}=await sb.from("profiles").select("store_id,role").eq("id",user.id).single();
     if(error||owner.role!=="owner"||!owner.store_id){app.innerHTML='<p class="error">Akses halaman ini hanya untuk Owner.</p>';return;}
     const {data:store}=await sb.from("stores").select("business_code,name").eq("id",owner.store_id).single();
-    app.innerHTML='<h2>Tim &amp; Akun</h2><div class="team-wrap"><section class="team-card"><div class="team-heading"><span class="eyebrow">BUAT AKUN</span><h3>Karyawan Baru</h3></div><form id="teamForm" class="team-form"><label>Nama karyawan<input id="teamName" required maxlength="80" placeholder="Contoh: Budi"></label><label>Username<input id="teamUsername" required minlength="3" maxlength="32" placeholder="Contoh: budi"></label><label>Bagian<select id="teamRole"><option value="manager">Manager</option><option value="kitchen">Kitchen</option><option value="waiter">Waiter / Penjual</option></select></label><label>Nomor WhatsApp<input id="teamPhone" type="tel" required maxlength="24" placeholder="08xxxxxxxxxx"></label><label>Kode toko<input value="'+esc(store?.business_code||"")+'" readonly></label><button class="btn" type="submit">+ Buat Akun Karyawan</button></form><div id="teamCredential"></div></section><section class="team-card"><div class="team-heading"><span class="eyebrow">AKUN STAFF</span><h3 id="teamCount">0 akun</h3></div><div id="teamList" class="team-list">Memuat...</div></section></div><button class="btn secondary" id="teamBack" type="button">Kembali ke Dashboard</button>';
+    app.innerHTML='<h2>Tim &amp; Akun</h2><div class="team-wrap"><section class="team-card"><div class="team-heading"><span class="eyebrow">BUAT AKUN</span><h3>Karyawan Baru</h3></div><form id="teamForm" class="team-form"><label>Nama karyawan<input id="teamName" required maxlength="80" placeholder="Contoh: Budi"></label><label>Username<input id="teamUsername" required minlength="3" maxlength="32" placeholder="Contoh: budi"></label><label>Bagian<select id="teamRole"><option value="kitchen">Kitchen</option><option value="waiter">Waiter / Penjual</option></select></label><label>Nomor WhatsApp<input id="teamPhone" type="tel" required maxlength="24" placeholder="08xxxxxxxxxx"></label><label>Kode toko<input value="'+esc(store?.business_code||"")+'" readonly></label><button class="btn" type="submit">+ Buat Akun Karyawan</button></form><div id="teamCredential"></div></section><section class="team-card"><div class="team-heading"><span class="eyebrow">AKUN STAFF</span><h3 id="teamCount">0 akun</h3></div><div id="teamList" class="team-list">Memuat...</div></section></div><button class="btn secondary" id="teamBack" type="button">Kembali ke Dashboard</button>';
     $("teamBack").onclick=()=>window.location.reload();
     $("teamForm").onsubmit=async e=>{
       e.preventDefault();
@@ -42,7 +42,7 @@
   }
   async function drawList(sb,storeId){
     const el=$("teamList");if(!el)return;
-    const {data:list,error}=await sb.from("profiles").select("id,full_name,username,phone,role,is_active").eq("store_id",storeId).neq("role","owner").order("created_at",{ascending:false});
+    const {data:list,error}=await sb.from("profiles").select("id,full_name,username,phone,role,is_active").eq("store_id",storeId).neq("role","owner").neq("role","manager").order("created_at",{ascending:false});
     if(error){el.textContent="Gagal memuat akun staff: "+error.message;return;}
     $("teamCount").textContent=(list||[]).length+" akun";
     el.innerHTML=list?.length?list.map(u=>'<div class="team-row"><div class="team-main"><b>'+esc(u.full_name||u.username)+'</b><small>'+esc(roleNames[u.role]||u.role)+' · '+esc(u.phone||"-")+'</small><small>Status: '+(u.is_active?"Aktif":"Nonaktif")+' · Username: '+esc(u.username)+'</small></div><div class="team-actions"><button type="button" data-reset="'+esc(u.id)+'">Reset PIN</button><button type="button" data-toggle="'+esc(u.id)+'" data-active="'+(!u.is_active)+'">'+(u.is_active?"Nonaktifkan":"Aktifkan")+'</button></div></div>').join(""):'<p class="team-note">Belum ada akun staff.</p>';
